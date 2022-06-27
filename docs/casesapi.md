@@ -1,5 +1,6 @@
-## **Cases API document**
-##### Last updated on: 9.6.2022
+**Last updated on: 9.6.2022**
+
+## **Partner Integration API**
 
 ### **Overview**
 
@@ -42,10 +43,8 @@ The format of the header is:
 
 <table>
   <tr>
-   <td>x-kahun-clinic-id
-   </td>
-   <td><provided clinic ID>
-   </td>
+   <td>x-kahun-clinic-id</td>
+   <td>provided clinic ID</td>
   </tr>
 </table>
 
@@ -64,13 +63,13 @@ Method: POST
   <tr>
    <td>x-api-key
    </td>
-   <td><provided api key>
+   <td>provided api key
    </td>
   </tr>
   <tr>
    <td>x-kahun-clinic-id
    </td>
-   <td><clinic Id from clinic management page>
+   <td>clinic Id from clinic management page
    </td>
   </tr>
   <tr>
@@ -300,10 +299,9 @@ The status is a JSON document:
 
 ```json
 {
-  \
-"status": "CREATED" | "IN_PROGRESS" | "COMPLETED" | "ABANDONED",
-"questionsCount":28,
-"conversationProgress": 100
+  "status": "CREATED",  // "IN_PROGRESS" | "COMPLETED" | "ABANDONED",
+  "questionsCount": 28,
+  "conversationProgress": 100
 }
 ```
 
@@ -356,7 +354,7 @@ Kahun Clinic ID.
 
 ### **Limitations**
 
-Only one webhook can be defined per Kahun Clinic ID. \
+Only one webhook can be defined per Kahun Clinic ID. 
 
 The Kahun system will retry delivery of notifications only a limited number of times. To use webhook integration, you
 must provide a service with enough capacity for the expected rate of notifications.
@@ -378,7 +376,7 @@ Each message may contain one or more separate notification messages, and will be
   "clinicId": "<originating clinic id>",
   "jwtSignature": "<string>",
   "notifications": [
-    '<notifcation1>,<notifcation2>'
+    "<notifcation1>,<notifcation2>"
   ]
 } 
 ```
@@ -459,7 +457,6 @@ your domain details to prevent CORS errors when using Kahun code on your website
    Use a script tag as follows (nested within the `<body>` tag in the page):
 
 ```html
-
 <script src="https://patient.kahun.com/embed.js"></script>
 ```
 
@@ -511,60 +508,41 @@ Here is a list of supported alignment variations:
 
 <table>
   <tr>
-   <td>Attribute value
-   </td>
-   <td>Description
-   </td>
-   <td>Screenshoot
+   <td>Attribute value</td>
+   <td>Description</td>
+   <td>Screenshoot</td>
+  </tr>
+  <tr>
+   <td>data-window-alignment="left" </td>
+   <td>Window is aligned to the <strong>left</strong> side of the screen<strong> (default)</strong></td>
+   <td>
+
+[//]: # (<img src="images/image1.png" width="" alt="alt_text" title="image_tooltip">)
    </td>
   </tr>
   <tr>
-   <td>data-window-alignment="left"
-   </td>
-   <td>Window is aligned to the <strong>left</strong> side of the screen  \
- \
-<strong>(default)</strong>
-   </td>
+   <td>data-window-alignment="right" </td>
+   <td>Window is aligned to the <strong>right</strong> side of the screen (default)</td>
    <td>
-<h5>
-<img src="images/image1.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
+
+[//]: # (<img src="images/image2.png" width="" alt="alt_text" title="image_tooltip">)
    </td>
   </tr>
   <tr>
-   <td>data-window-alignment="right"
-   </td>
-   <td>Window is aligned to the <strong>right</strong> side of the screen  \
-(default)
-   </td>
+   <td>data-window-alignment="center"</td>
+   <td>The window will open in a pop-up like view the middle of the screen with a dark background over the content of the page</td>
    <td>
-<h5>
-<img src="images/image2.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
+
+[//]: # (<img src="images/image3.png" width="" alt="alt_text" title="image_tooltip">)
    </td>
   </tr>
   <tr>
-   <td>data-window-alignment="center"
-   </td>
-   <td>The window will open in a pop-up like view the middle of the screen with a dark background over the content of the page
-   </td>
-   <td>
-<h5>
-<img src="images/image3.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
-   </td>
-  </tr>
-  <tr>
-   <td>data-window-alignment="fullscreen"
-   </td>
-   <td>This value is used for clients who wish to load the chat as a standalone app that takes over the entire content of the page.
-<p>
-NOTE: if in “fullscreen” mode the user cannot close/minimize the chat screen
+   <td>data-window-alignment="fullscreen"</td>
+   <td>This value is used for clients who wish to load the chat as a standalone app that takes over the entire content of the page.<p> NOTE: if in “fullscreen” mode the user cannot close/minimize the chat screen
    </td>
    <td>
-<h5>
-<img src="images/image4.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
+
+[//]: # (<img src="images/image4.png" width="" alt="alt_text" title="image_tooltip">)
    </td>
   </tr>
 </table>
@@ -575,10 +553,10 @@ The widget can optionally start as a small icon button, with the main interface 
 pressed. This is the default behavior of the widget, which can be overridden by including the following in the settings
 attribute:
 
-```js
-"open"
-:
-true
+```json
+{
+  "open": true
+}
 ```
 
 It is possible to customize the layout of the “open chat” icon. You can modify whether it would be a floating icon
@@ -587,7 +565,6 @@ text rendered on the icon. (To modify the visual icon itself, use the
 [icon setting ](#icon-setting))
 
 Here is a list of supported alignment variations:
-
 <table>
   <tr>
    <td>Attribute value
@@ -605,22 +582,20 @@ Here is a list of supported alignment variations:
 <a href="#heading=h.eort2rkvdhbj">icon setting</a> is set then the icon will be rendered <strong>(default)</strong>
    </td>
    <td>
-<h5>
-<img src="images/image5.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
+
+[//]: # (<img src="images/image5.png" width="" alt="alt_text" title="image_tooltip">)
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="static-icon"
    </td>
-   <td>The button is rendered as part of the window content if  
-<a href="#heading=h.eort2rkvdhbj">icon setting</a> is set then the url provided will be rendered as an icon
+   <td>The button is rendered as part of the window content if icon setting is set then the url provided will be rendered as an icon
    </td>
    <td>
-<h5>
-<img src="images/image6.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
-   </td>
+
+[//]: # (<img src="images/image6.png" width="" alt="alt_text" title="image_tooltip">)
+
+</td>
   </tr>
   <tr>
    <td>data-window-alignment="text-button"
@@ -629,11 +604,11 @@ Here is a list of supported alignment variations:
 <p>
 <strong>This text can be overridden using the  <code>data-button-text </code>attribute</strong>
    </td>
-   <td>
-<h5>
-<img src="images/image7.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
-   </td>
+
+<td>
+
+[//]: # (<img src="images/image7.png" width="" alt="alt_text" title="image_tooltip">)
+</td>
   </tr>
   <tr>
    <td>data-window-alignment="floating-text-button"
@@ -645,9 +620,8 @@ With the default text “Start your diagnosis”.
 <strong>This text can be overridden using the  <code>data-button-text </code>attribute</strong>
    </td>
    <td>
-<h5>
-<img src="images/image8.png" width="" alt="alt_text" title="image_tooltip">
-</h5>
+
+[//]: # (   <img src="images/image8.png" width="" alt="alt_text" title="image_tooltip">)
    </td>
   </tr>
   <tr>
