@@ -117,13 +117,17 @@ Example:
 ```
 
 * **Text Overrides** \
-  Each request can also have a overrides object, that enables to customize texts shown in the Patient1st application:
+  Each request can also have a overrides object, which enables to customize texts shown in the Patient1st application. You can customize text using plain text or html formatted text.\
+  \
+ To use html formatting, your entire content should be enclosed in a valid html tag (for example, a `<div>` tag). 
 
 ```json
 {
   "overrides": {
-    "WELOCME_PATIENT": "Customized welcome text",
-    "THANK_YOU_PATIENT": "Customized thank you text"
+    "WELCOME_PATIENT": "Welcome text appearing at top of cover page",
+    "WELCOME_PARTNERS":  "Main text of welcome cover page",
+    "THANK_YOU_PATIENT": "Customized thank you text",
+    "THANKS_SUB_TITLE": "Additional thank you page content"
   }
 }
 ```
