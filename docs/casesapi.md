@@ -16,7 +16,7 @@ partner can:
 ### **Postman collection**
 You can use this postman collection to try out the API described in this document and see working example. 
 Just add to the Variables section the API-Key and Clinic Id provided for you. 
-[Download postman collection](./postman_collection.json)
+[Download postman collection](./postman_collection.json ':ignore')
 
 ### **API Key**
 
