@@ -526,24 +526,21 @@ Here is a list of supported alignment variations:
    <td>data-window-alignment="left" </td>
    <td>Window is aligned to the <strong>left</strong> side of the screen<strong> (default)</strong></td>
    <td>
-
-[//]: # (<img src="images/image1.png" width="" alt="alt_text" title="image_tooltip">)
+    <img src="window_alignment_left.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="right" </td>
    <td>Window is aligned to the <strong>right</strong> side of the screen (default)</td>
    <td>
-
-[//]: # (<img src="images/image2.png" width="" alt="alt_text" title="image_tooltip">)
+    <img src="window_alignment_right.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="center"</td>
    <td>The window will open in a pop-up like view the middle of the screen with a dark background over the content of the page</td>
    <td>
-
-[//]: # (<img src="images/image3.png" width="" alt="alt_text" title="image_tooltip">)
+    <img src="winwo_aligment_center.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
@@ -551,9 +548,8 @@ Here is a list of supported alignment variations:
    <td>This value is used for clients who wish to load the chat as a standalone app that takes over the entire content of the page.<p> NOTE: if in “fullscreen” mode the user cannot close/minimize the chat screen
    </td>
    <td>
-
-[//]: # (<img src="images/image4.png" width="" alt="alt_text" title="image_tooltip">)
-   </td>
+    <img src="window_aligment_fullscreen.png" width="" alt="alt_text" title="image_tooltip">
+</td>
   </tr>
 </table>
 
@@ -585,30 +581,26 @@ Here is a list of supported alignment variations:
    </td>
   </tr>
   <tr>
-   <td>data-window-alignment="floating-icon"
+   <td>data-button-layout="floating-icon"
    </td>
    <td>The button is rendered as an icon in the left/right area of the page (based on data-window-alignment attribute value) if  
 
 <a href="#heading=h.eort2rkvdhbj">icon setting</a> is set then the icon will be rendered <strong>(default)</strong>
    </td>
    <td>
-
-[//]: # (<img src="images/image5.png" width="" alt="alt_text" title="image_tooltip">)
+<img src="button_layout_floating_icon.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
-   <td>data-window-alignment="static-icon"
+   <td>data-button-layout="static-icon"
    </td>
    <td>The button is rendered as part of the window content if icon setting is set then the url provided will be rendered as an icon
    </td>
-   <td>
-
-[//]: # (<img src="images/image6.png" width="" alt="alt_text" title="image_tooltip">)
-
+   <td><img src="button_aligment_static_button.png" width="" alt="data-button-layout-static-icon" title="image_tooltip">
 </td>
   </tr>
   <tr>
-   <td>data-window-alignment="text-button"
+   <td>data-button-layout="text-button"
    </td>
    <td>A round static button is rendered as part of the page content. With the default text “Start your diagnosis”. 
 <p>
@@ -616,12 +608,11 @@ Here is a list of supported alignment variations:
    </td>
 
 <td>
-
-[//]: # (<img src="images/image7.png" width="" alt="alt_text" title="image_tooltip">)
+<img src="button_aligment_text_button.png" width="" alt="alt_text" title="image_tooltip">
 </td>
   </tr>
   <tr>
-   <td>data-window-alignment="floating-text-button"
+   <td>data-button-layout="floating-text-button"
    </td>
    <td>A round button is rendered in the left/right area of the page (based on data-window-alignment attribute value). 
 <p>
@@ -630,14 +621,13 @@ With the default text “Start your diagnosis”.
 <strong>This text can be overridden using the  <code>data-button-text </code>attribute</strong>
    </td>
    <td>
-
-[//]: # (   <img src="images/image8.png" width="" alt="alt_text" title="image_tooltip">)
+    <img src="button_aligment_floating_text_button.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-button-text="Start Chat"
    </td>
-   <td>The button text
+   <td>The text that will appear on either 'text-button' or 'floating-text-button'
    </td>
    <td>
    </td>
@@ -696,6 +686,8 @@ let settings = JSON.stringify({
    <td>url
    </td>
    <td>What icon image to display while the widget is closed. 
+<p>Not relevant for data-button-layout="text-button and data-button-layout="floating-text-button</p>
+        <b>This is the default icon that will be displayed if no value is provided:</b>    <img src="deafualt_open_chat_icon.png" width="" alt="alt_text" title="image_tooltip">
    </td>
    <td>
    </td>
