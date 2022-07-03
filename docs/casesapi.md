@@ -12,6 +12,11 @@ partner can:
 * Receive a text summary of the patient interaction.
 * Get a link which launches a provider-facing interactive Patient Card which contains all information and insights from
   the interaction.
+  
+### **Postman collection**
+You can use this postman collection to try out the API described in this document and see working example. 
+Just add to the Variables section the API-Key and Clinic Id provided for you. 
+[Download postman collection](./postman_collection.json)
 
 ### **API Key**
 
