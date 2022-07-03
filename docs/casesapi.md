@@ -25,7 +25,7 @@ Remember to configure the collection and add your provided CLINIC_ID and API_KEY
 
 In order to use the API, you will be provided an API key which should be passed as a header on all HTTPS POST requests
 to the API. \
-The format of the header is: \
+The format of the header is: 
 
 <table>
   <tr>
