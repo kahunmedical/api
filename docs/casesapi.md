@@ -15,10 +15,10 @@ partner can:
 
 
 ### **Postman Collection**
-You can use this postman collection to try out the API described in this document and see working examples.
-Just add to the Variables Section of the collection your API-Key and Clinic Id as provided for you.
+Postman (postman.com) is a free tool for testing APIs. We provide a Postman collection which you can import to try out the API described in this document and see working examples.  
+Remember to configure the collection and add your provided CLINIC_ID and API_KEY to the Variables Section.
 
-[Download postman collection](postman_collection.json ':ignore :download')
+<a href="./postman_collection.json" download>Download Postman Collection</a>
  
 
 ### **API Key**
