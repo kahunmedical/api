@@ -297,6 +297,39 @@ Here is an example of a summary section:
   "status": "COMPLETED"
 }
 ```
+#### Navigation Advice
+The navigation advice is included, when available, as part of the summary JSON response. The navigation advice includes the following fields.
+
+| <em>FIELD</em> | <em>DESCRIPTION</em>                                                                  |
+|----------------|---------------------------------------------------------------------------------------|
+| title          | The call to action for this navigation                                                |
+| description    | A more detailed explanatory text                                                      |
+| level          | A number from 1-10 indicating the urgency of the navigation, where 1 is most emergent |
+| id             | An id string which uniquely identifies this navigation advice                         |
+
+##### Navigation Advice Levels
+Several variants of navigation advice will have the same numeric level, if they represent approximately the same level of urgency, or the same time frame for seeking care. 
+Note that additional navigation advice verbiage may be added in the future, so it is best to rely on the *level* field for any programmatic action.
+
+| <em>Level</em> | <em>Navigation Advice</em> |
+|----------------|----------------------------|
+| 1              |Call EMS 911 Now|
+| 2              |Go to ED Now |
+| 2              |Go to L&D Now|
+| 3              |Go to ED Now (or PCP triage)|
+| 3              |Go to L&D Now (or PCP triage)|
+| 4              |Office or Video visit now|
+| 5              |Callback or video visit by PCP within 1 hour|
+| 6              |Office or Video visit today |
+| 6              |Callback or video visit by PCP today |
+| 7              |Office or Video visit within 24 Hours |
+| 7              |Office or Video visit today/tomorrow |
+| 8              |Office or Video visit in 3 days |
+| 9              |Office or Video visit within 2 Weeks |
+| 10             |Home Care  |
+
+
+
 
 ### **Retrieving the status of the case record**
 
