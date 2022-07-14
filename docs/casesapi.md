@@ -486,12 +486,14 @@ Using the SDK, you can do the following within your web site:
 
 ### SDK Script Tag
 
-To use the sdk on a webpage, include the Kahun script tag within the `head` tag of the page.
+To use the SDK on a webpage, include the Kahun script tag within the `head` tag of the page.
 The source url for the script should be:
 ```html
 https://patient.kahun.com/api/clientapi.js
 ```
-Optionally, you can use the `onload` attribute of the script tag to set a custom javascript function that will run when the library has been loaded. This is a good place to place code that should interact with the SDK as soon as the page loads.  
+It is recommended to use the `async` or `defer` attribute so that tag loading will not affect page performance.
+
+Optionally,  use the `onload` attribute of the script tag to set a custom javascript function that will run when the library has been loaded. This is a good place for code that should interact with the SDK as soon as the page loads.  
 
 Example
 ```html
@@ -526,8 +528,9 @@ declare namespace Kahun {
     function newCaseRecord(params: NewCaseParams): Promise<CaseRecord>
 }
 ```
+**`Kahun.newCaseRecord({...params})`**
 Use to create a new case record which will be assigned a unique id in the Kahun system.
-Parameters:
+
 
 | <em>Parameter</em>    | <em>Description</em> |    
 |--------------|-------------------------------|
@@ -535,7 +538,7 @@ Parameters:
 | clinicId     | The provided clinic id        |      
 | clinicalData | Optional. Use this to prepopulate information about the patient.<br>  See the [Initial clinical and demographic data](#Initial clinical and demographic data) section for a description of this format.|
 
-The function returns a promise which will resolve to the CaseRecord object for the newly created case.
+Returns a promise which will resolve to the CaseRecord object for the newly created case.
 
 **Example**
 ```javascript
@@ -570,7 +573,17 @@ declare namespace Kahun {
     function existingCaseRecord(params: ExistingCaseParams): Promise<CaseRecord>
 }
 ```
-Use to perform operations or get information using an existing case id. For example, the case record may have been created through the server-to-server flow, or perhaps through a different web page, and has been passed to this page.
+**`Kahun.existingCaseRecord({...params})`**
+Use to perform operations or get information using an existing case id. 
+
+For example, the case record may have been created through the server-to-server flow, or perhaps through a different web page, and has been passed to this page.
+
+
+| <em>Parameter</em> | <em>Description</em>        |    
+|--------------------|-----------------------------|
+| apiKey             | The api key provided to you |
+| clinicId           | The provided clinic id      |      
+| caseId             | The existing case id        |
 
 **Example**
 ```javascript
@@ -810,7 +823,7 @@ If the widget is not currently open this will have no effect
 
 #### Responding to Events
 
-The widget emmits events which can be sent to code on the page.
+The widget emits events which can be sent to code on the page.
 
 To register a listener function to receive events use: `kahunCaseRecord.on(event-name, listener)`
 
