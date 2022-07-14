@@ -1,5 +1,7 @@
 ## **Partner Integration API**
 
+## **Server REST API**
+
 ### **Overview**
 
 Kahun provides a REST API to allow partners to integrate with the patient intake chat service. Using the API, the
@@ -10,9 +12,12 @@ partner can:
 * Generate a unique url link which can be shared with the patient. The link launches the patient interaction session.
 * Poll the system for the current status of the interaction.
 * Receive a text summary of the patient interaction.
+* Receive structured insights of the patient case, such as navigation advice and likely differencial diagnosis.
 * Get a link which launches a provider-facing interactive Patient Card which contains all information and insights from
   the interaction.
 
+_The REST API is intended to be used for server-to-server communication, and not directly from a web-browser.
+To interact with Kahun in a client-side context, e.g. from a webpage on your system, please see the Web Browser SDK section_
 
 ### **Postman Collection**
 Postman (postman.com) is a free tool for testing APIs. We provide a Postman collection which you can import to try out the API described in this document and see working examples.  
@@ -225,7 +230,7 @@ engine.
 
 The summary can be used to copy Kahun’s output to an external system, for example, as a case note to an EHR system.
 
-Here is the basic structure of the summary JSON document
+Here is the basic structure of the summary JSON document <a id="summary-format"></a>
 
 ```json
 {
@@ -470,75 +475,210 @@ REST API.
 
 The patient summary is only included in the notification when the status has changed to either COMPLETED or ABANDONED.
 
-## Chat User Interface
+## Web Browser SDK
 
-The patient-facing chat application can be run either as a standalone web-page, or as an embedded widget within a 3-rd
-party web application.
+The web-browser sdk allows a partner to integrate Kahun functionality with web pages hosted in their environment
 
-### **Standalone Web Application**
+Using the SDK, you can do the following within your web site:
+* Create a new case record, and populate it with existing patient information
+* Host the Kahun Chatbot as a widget running within your own website
+* Retrieve case insights such as text summary, navigation advice, and likely diagnosis directly to the web page. 
 
-The standalone web application is a responsive web app which is designed to be usable on a wide range of devices both
-desktop and mobile. To launch the standalone application, launch the url which is provided under the _patient _property
-returned when the case record was created.
+### SDK Script Tag
 
-### **Widget Integration**
+To use the sdk on a webpage, include the Kahun script tag within the `head` tag of the page.
+The source url for the script should be:
+```html
+https://patient.kahun.com/api/clientapi.js
+```
+Optionally, you can use the `onload` attribute of the script tag to set a custom javascript function that will run when the library has been loaded. This is a good place to place code that should interact with the SDK as soon as the page loads.  
 
-Kahun’s chat can be run as an integrated HTML element embedded in a client’s page.
+Example
+```html
+<head>
+<script>
+    function onKahunLoaded() {
+        //... ok to interact with the kahun sdk here
+    }
+</script>    
+<script src="https://patient.kahun.com/api/clientapi.js" onload="onKahunLoaded()" async></script>
+</head>
+```
+##### Before you begin integration
+
+Coordinate with Kahun staff the domain(s) which are going to host the script tag. The Kahun backend must be configured with your domain details to prevent CORS errors when using Kahun code on your website.
+
+
+### Obtaining a Case Record
+ 
+You will normally first create a case record object, which represents a particular patient case record in Kahun's system, this object provides access to all functionality relating to that patient case. 
+
+#### Creating a new case record
+
+**New Case Record**
+```typescript
+interface NewCaseParams {
+    apiKey: string; // the APIKEY provided to you
+    clinicId: string; // the CLINIC_ID provided to you
+    clinicalData?: object; // optionally, background data about the patient 
+}
+declare namespace Kahun {
+    function newCaseRecord(params: NewCaseParams): Promise<CaseRecord>
+}
+```
+Use to create a new case record which will be assigned a unique id in the Kahun system.
+Parameters:
+
+| <em>Parameter</em>    | <em>Description</em> |    
+|--------------|-------------------------------|
+| apiKey       | The api key provided to you   |
+| clinicId     | The provided clinic id        |      
+| clinicalData | Optional. Use this to prepopulate information about the patient.<br>  See the [Initial clinical and demographic data](#Initial clinical and demographic data) section for a description of this format.|
+
+The function returns a promise which will resolve to the CaseRecord object for the newly created case.
+
+**Example**
+```javascript
+    var kahunCaseRecord;
+    kahunCaseRecord = await Kahun.newCaseRecord({
+       apiKey: "<provided api key>",
+       clinicId: "<provided clinic id",
+       clinicalData: {
+           "caseFormat": "athena",
+           "case": {
+               "demographics": {
+                   "age": 54,
+                   "gender": "M"
+               },
+           }
+       }
+    });
+    console.log("The new case id is", kahunCaseRecord.getCaseId())
+```
+
+#### Accessing an existing case record
+
+**Existing Case Record**
+
+```typescript
+interface ExistingCaseParams {
+    apiKey: string; // the APIKEY provided to you
+    clinicId: string; // the CLINIC_ID provided to you
+    caseId: string; // the case id to use 
+}
+declare namespace Kahun {
+    function existingCaseRecord(params: ExistingCaseParams): Promise<CaseRecord>
+}
+```
+Use to perform operations or get information using an existing case id. For example, the case record may have been created through the server-to-server flow, or perhaps through a different web page, and has been passed to this page.
+
+**Example**
+```javascript
+    var kahunCaseRecord;
+    kahunCaseRecord = await Kahun.existingCaseRecord({
+       apiKey: "<provided api key>",
+       clinicId: "<provided clinic id>",
+       caseId: "<previously created case id>"
+    });
+    console.log("The status of this case is", kahunCaseRecord.getStatus())
+```
+
+### Case Record Object
+```typescript
+interface CaseRecord {
+  getCaseId(): string; // the id of the case
+  getLinks(): Record<string, string>; // get urls for summary,pdf,patient,and provider web resources
+  getStatus(): "ABANDONED" | "COMPLETED" | "IN_PROGRESS" | "CREATED";  
+  generateSummary(): Promise<object>; // generate and receive summary output
+  startChatBotWidget(settings?: WidgetSettings): Promise<boolean>; // launch the chatbot as a page widget
+  removeChatBotWidget(): void; // remove the chatbot widget from the page
+  on(name: string, cb: any); // register for events
+  removeListener(name: string, cb: any); //  unregister for events
+}
+```
+The CaseRecord is object is returned when creating a new case, or accessing an existing case. This provides the main API for functionality relating to the case.
+
+#### getCaseId
+
+Returns the unique id for the case.
+
+#### getLinks
+
+Returns an object containing urls to various web services.
+<table>
+  <tr>
+   <td><em>FIELD</em>
+   </td>
+   <td><em>DESCRIPTION</em>
+   </td>
+  </tr>
+  <tr>
+   <td>patient
+   </td>
+   <td>A URL link for the patient of Kahun’s Patient1st application. This link can be shared with the patient.
+   </td>
+  </tr>
+  <tr>
+   <td>provider
+   </td>
+   <td>A URL link for the physician which displays the Patient Card web interface. The Patient Card displays the summary and Kahun’s insights relating to the patient background and present findings. 
+   </td>
+  </tr>
+  <tr>
+   <td>summary
+   </td>
+   <td>A URL link to a JSON document representing a textual summary for the patient case.
+   </td>
+  </tr>
+  <tr>
+   <td>pdf
+   </td>
+   <td>A URL link which downloads a pdf document with a formatted version of the summary information
+   </td>
+  </tr>
+</table>
+
+#### getStatus
+Returns the current status of the interaction.
+
+#### generateSummary
+Returns a promise which resolves to the _Summary Output Document_. This JSON object contains the textual summary, navigation advice, and differencial diagnosis. 
+It is best to wait until the case is no longer in progress (status will be either "COMPLETED" or "ABANDONED") before generating the summary. 
+
+The format of the returned object is the same as for the REST API. See [Summary Resource](#summary-format)
+
+### ChatBot Widget
+
+Kahun’s chatbot can be run as an integrated HTML element embedded in your page. The chatbot is launched and controlled using the CaseRecord API
+
+Note: You do not have to integrate the chat bot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
+desktop and mobile. To launch the standalone application, launch the url which is provided under the _patient_ property returned when the case record was created, or returned from the `kahunCaseRecord.getLinks()` API call. 
+
 
 #### **HTML Integration**
 
 In order to integrate a widget-like element in your HTML page, take the following steps:
 
-##### Before you begin integration
+##### Div Tag
 
-Coordinate with Kahun staff the domain(s) which are going to host the widget. The Kahun backend must be configured with
-your domain details to prevent CORS errors when using Kahun code on your website.
-
-##### Page Integration
-
-1. Load the Kahun library code on page load.  \
-   Use a script tag as follows (nested within the `<body>` tag in the page):
-
-```html
-<script src="https://patient.kahun.com/embed.js"></script>
-```
+1. Include the Kahun script tag as descibed above.
 
 2. Create a div element on the page which will hold the widget.  \
    The div element should have the following id: id=”kahun-patient” . Kahun code will place the widget into the DOM
    within the div you have provided. \
    \
-   The div tag is configured using html attributes below. Note that the _settings_ attribute is special and is a JSON
-   formatted string.
-
-_In some cases, you may want to delay the widget appearing until some event has happened (for example, a button has been
-pressed), and/or some backend code has run. In those cases, follow instructions in
-the [Delayed Initialization](#delayed-initialization) section_
+   The div tag is configured using html attributes below. 
 
 ```html
 
 <div
         id="kahun-patient"
         data-window-alignment="left" (optional)
-        data-button-layout="floating-icon" (optional)
-        data-button-text="Start your diagnosis now" (optional)
-        settings='{
-   "locale":"<LOCALE>",
-   "sessionId":<SESSION_ID>,
-   "partnerId":"<PARTNER_ID>",
-   "icon":"<URL_TO_AN_ICON>",
-   "open":<true|false>,
-   "clinicId":"<CLINIC_ID>",
-   "patientCaseId":"<CASE_ID>",
-   "utmString":"<UTM_PARAMS>",
-   "onCompletionUrl": "<REDIRECT URL>"
- }'
+'
 >
 </div>
 ```
 
-All parameters are optional and the app will still run if only some of them are presented.
-
-#### **Customizing chat window alignment and button view**
 
 ##### Window alignment
 
@@ -586,106 +726,22 @@ Here is a list of supported alignment variations:
   </tr>
 </table>
 
-##### Button layout
+#### Launching the Widget
 
-The widget can optionally start as a small icon button, with the main interface only opening after the button is
-pressed. This is the default behavior of the widget, which can be overridden by including the following in the settings
-attribute:
+**Start Chat Bot**
 
-```json
-{
-  "open": true
+Use the `kahunCaseRecord.startChatBot(...)` API call to launch the widget and mount it into the DOM.
+
+```typescript
+interface WidgetSettings {
+    locale: string; // the display language for chatbot
+    onCompletionUrl: URL; // if provided, will redirect at end of conversation
+    onAbandonUrl: URL; // if provided, will redirect when conversation ends prematurely
 }
+
 ```
-
-It is possible to customize the layout of the “open chat” icon. You can modify whether it would be a floating icon
-rendered at a fixed position of the window, or an icon inline with the contents of the page. You can also control the
-text rendered on the icon. (To modify the visual icon itself, use the
-[icon setting ](#icon-setting))
-
-Here is a list of supported alignment variations:
-<table>
-  <tr>
-   <td>Attribute value
-   </td>
-   <td>Description
-   </td>
-   <td>Screenshoot
-   </td>
-  </tr>
-  <tr>
-   <td>data-button-layout="floating-icon"
-   </td>
-   <td>The button is rendered as an icon in the left/right area of the page (based on data-window-alignment attribute value) if  
-
-<a href="#heading=h.eort2rkvdhbj">icon setting</a> is set then the icon will be rendered <strong>(default)</strong>
-   </td>
-   <td>
-<img src="button_layout_floating_icon.png" width="" alt="alt_text" title="image_tooltip">
-   </td>
-  </tr>
-  <tr>
-   <td>data-button-layout="static-icon"
-   </td>
-   <td>The button is rendered as part of the window content if icon setting is set then the url provided will be rendered as an icon
-   </td>
-   <td><img src="button_aligment_static_button.png" width="" alt="data-button-layout-static-icon" title="image_tooltip">
-</td>
-  </tr>
-  <tr>
-   <td>data-button-layout="text-button"
-   </td>
-   <td>A round static button is rendered as part of the page content. With the default text “Start your diagnosis”. 
-<p>
-<strong>This text can be overridden using the  <code>data-button-text </code>attribute</strong>
-   </td>
-
-<td>
-<img src="button_aligment_text_button.png" width="" alt="alt_text" title="image_tooltip">
-</td>
-  </tr>
-  <tr>
-   <td>data-button-layout="floating-text-button"
-   </td>
-   <td>A round button is rendered in the left/right area of the page (based on data-window-alignment attribute value). 
-<p>
-With the default text “Start your diagnosis”. 
-<p>
-<strong>This text can be overridden using the  <code>data-button-text </code>attribute</strong>
-   </td>
-   <td>
-    <img src="button_aligment_floating_text_button.png" width="" alt="alt_text" title="image_tooltip">
-   </td>
-  </tr>
-  <tr>
-   <td>data-button-text="Start Chat"
-   </td>
-   <td>The text that will appear on either 'text-button' or 'floating-text-button'
-   </td>
-   <td>
-   </td>
-  </tr>
-</table>
-
-#### **Integration with CASES REST API**
-
-When integrating with the cases-api, the settings attribute must contain the contents provided by the API in the _
-widgetSettings _property.
-
-Using the settings provided by the API will load a chat-bot which is linked to the case record previously created
-through the API.
-You can merge the widgetSettings provided from the API with any additional settings to create the final settings object
-which is passed to the widget
-
-```javascript
-let settings = JSON.stringify({
-    ...widgetSettings,
-    "locale": "en",
-    "open": true
-})
-```
-
-#### **Optional Widget Settings**
+##### **Optional Widget Settings**
+A settings object can be passed to the `kahunCaseRecord.startChatBot(...)`  call to control behavior of the chat bot. All settings are optional.
 
 <table>
   <tr>
@@ -711,41 +767,6 @@ let settings = JSON.stringify({
 “fr” - French
 “pt” -  Portuguese
 “es” - Spanish  
-   </td>
-  </tr>
-  <tr>
-   <td>icon
-   </td>
-   <td>url
-   </td>
-   <td>What icon image to display while the widget is closed. 
-<p>Not relevant for data-button-layout="text-button and data-button-layout="floating-text-button</p>
-        <b>This is the default icon that will be displayed if no value is provided:</b>    <img src="deafualt_open_chat_icon.png" width="" alt="alt_text" title="image_tooltip">
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>open (optional)
-   </td>
-   <td>true | false
-   </td>
-   <td>Whether the app should start open as the page loads or start in a minimized state. 
-<strong>Default: false</strong>
-   </td>
-   <td>
-   </td>
-  </tr>
-  <tr>
-   <td>clinicId, partnerId, 
-<p>
-patientCaseId 
-   </td>
-   <td>internal
-   </td>
-   <td>Session information
-   </td>
-   <td>Should be populated from the create case api (widgetSettings). For other integration use-cases, will be provided by Kahun support.
    </td>
   </tr>
   <tr>
@@ -780,37 +801,81 @@ patientCaseId
   </tr>
 </table>
 
-##### Delayed initialization
+#### Closing the Widget
 
-In some scenarios you may want to start the chat only after an API server call or after a user interaction (i.e.
-creating a customized button. asking the user to fill in some information, loading some user data etc.)
-A common scenario is to have a custom ‘start chat’ button on the page. In response to clicking on the button, the page
-will call the backend to create the case record, and then display the widget .
+**Remove Chat Bot Widget**
 
-In order to accomplish this, create a `<div id="kahun-patient"></div>` _Without a settings attribute._
+To programmatically close the widget and remove it from the page, use `kahunCaseRecord.removeChatBotWidget()`
+If the widget is not currently open this will have no effect
 
-By creating the div without the settings attribute, the Kahun code will not display the widget immediately, but will
-wait for a programmatic call from the page to open the widget.
+#### Responding to Events
 
-##### **initKahunPatient**
+The widget emmits events which can be sent to code on the page.
 
-The _window.initKahunPatient_ is a javascript function which can be called to configure and load the widget from
-javascript code on the page.
+To register a listener function to receive events use: `kahunCaseRecord.on(event-name, listener)`
 
-The function takes a single parameter, which has the same format as the settings attribute, and essentially allows you
-to programmatically set the settings attribute. (see [widget settings](#optional-widget-settings))
+To unregister use: `kahunCaseRecord.removeListener(event-name, listener)`
 
+Example:
 ```javascript
-window.initKahunPatient({...settings, open: true});
+kahunCaseRecord.on("done", (evt) => {
+    console.log("user has completed the chat");
+})
 ```
 
-The _open_ flag will control whether the chat opens immediately, or whether a launch button will be shown. If you do not
-wish the chat to open automatically but rather just show the start chat button you may remove `open: true `
 
-Here is a complete example which you can fork or copy, implementing a custom button, and widget initialization showing
-integration with the API:
+<table>
+  <tr>
+   <td><em>Event</em>
+   </td>
+   <td><em>Description</em>
+   </td>
+   <td><em>Sample Payload</em>
+   </td>
+  </tr>
+  <tr>
+   <td>
+    <h7>widget_state</h7>
+   </td>
+   <td>Reports on whether the widget <em>interface</em> is open or close
+   </td>
+   <td>
+<code>
+{ 
+ "type":"widget_state",
+ "state": "open", 
+  "status": "IN_PROGRESS" 
+}</code>
+   </td>
+  </tr>
+  <tr>
+   <td>
+<h7>status</h7>
+   </td>
+   <td>Reports on progress of the interactive chat session
+   </td>
+   <td><code>{ 
+  "type": "status", 
+  "progress": 80, 
+  "status":  "IN_PROGRESS" 
+}</code>
+   </td>
+  </tr>
+  <tr>
+   <td>
+<h7>done</h7>
+   </td>
+   <td>Issued when chat bot is finished, whether the chat is completed, or was abandoned or skipped.
+   </td>
+   <td><code>{ 
+  "type": "done", 
+  "progress": 80, 
+  "status":  "COMPLETED" 
+}</code>
+   </td>
+  </tr>
+</table>
 
-[https://codepen.io/kahunapi/pen/rNJdvPq](https://codepen.io/kahunapi/pen/rNJdvPq)
 
 #### **CSS Customization**
 
@@ -843,59 +908,9 @@ be added to alter the “open” button location
     left: 15%;
 }
 ```
+### Sample Client Code
+Here is a complete example which you can fork or copy, implementing a custom button, and widget initialization showing
+integration with the API:
 
-#### **Page Events**
-
-The widget emits events using the javascript event mechanism. Code on the page can subscribe to these events to be
-notified of changes to the widget state
-
-Example:
-
-```javascript
-window.addEventListener("kahun_widget_state", (evt) => {
-    if (evt.state == "closed")
-        console.log("user has closed the chat widget");
-})
-```
-
-Events are emitted using the ‘window’ object.
-
-<table>
-  <tr>
-   <td><em>Event</em>
-   </td>
-   <td><em>Description</em>
-   </td>
-   <td><em>Sample Payload</em>
-   </td>
-  </tr>
-  <tr>
-   <td>
-    <h7>kahun_widget_state</h7>
-   </td>
-   <td>Reports on whether the widget <em>interface</em> is open or close
-   </td>
-   <td>
-<code>
-{ 
- "type":"kahun_widget_state",
- "state": "open", 
-  "status": "IN_PROGRESS" 
-}</code>
-   </td>
-  </tr>
-  <tr>
-   <td>
-<h7>kahun_session_status</h7>
-   </td>
-   <td>Reports on progress of the interactive chat session
-   </td>
-   <td><code>{ 
-  "type": "kahun_session_status", 
-  "progress": 80, 
-  "status":  "IN_PROGRESS" 
-}</code>
-   </td>
-  </tr>
-</table>
+[https://codepen.io/kahunapi/pen/rNJdvPq](https://codepen.io/kahunapi/pen/rNJdvPq)
 
