@@ -925,5 +925,5 @@ be added to alter the “open” button location
 Here is a complete example which you can fork or copy, implementing a custom button, and widget initialization showing
 integration with the API:
 
-[https://codepen.io/kahunapi/pen/rNJdvPq](https://codepen.io/kahunapi/pen/rNJdvPq)
+[https://codepen.io/kahunapi/pen/oNqBRZp](https://codepen.io/kahunapi/pen/rNJdvPq)
 
