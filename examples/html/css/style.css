@@ -1,0 +1,133 @@
+* {
+    box-sizing: border-box;
+}
+html, body {
+    min-height: 100%;
+    background: #fff;
+    color: #2c3e50;
+    padding: 0;
+}
+body {
+    font-size: 1.4rem;
+    text-rendering: optimizeLegibility;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+body, ul, ol, dl {
+    margin: 0;
+    padding: 0;
+}
+article, aside, audio,
+footer, header, nav, section, video {
+    display: block;
+}
+h1 {
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+p {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+textarea {
+    resize: vertical;
+}
+table { border-collapse: collapse; }
+td {
+    padding: .5rem;
+}
+img {
+    border: none;
+    max-width: 100%;
+}
+header {
+    background: #f7f7f9;/*linear-gradient(to left bottom, hsl(53, 100%, 85%) 0%,hsl(134, 100%, 85%) 100%);*/
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+main {
+    font-size: 16px;
+}
+.generator {
+    display: flex;
+    gap: 10px;
+    padding: 20px;
+}
+.border-box {
+    padding: 20px;
+    border: 1px solid #2c3e5045;
+    min-height: 100%;
+    width: 100%;
+    align-items: start;
+    border-radius: 4px;
+}
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 5px;
+    margin-bottom: 10px;
+}
+.form-input {
+    font-size: 16px;
+    font-family: inherit;
+    color: #2c3e50;
+    border: 1px solid #2c3e5045;
+    border-radius: 4px;
+    padding: 4px 10px;
+}
+.form-checkboxes {
+    margin-bottom: 20px;
+}
+.big-input {
+    width: 100%;
+}
+.form-label {
+    font-weight: 700;
+}
+.buttons-box {
+    margin: 20px;
+    padding-top: 20px;
+    text-align: center;
+}
+.kahun-button {
+    display: inline-block;
+    padding: 10px 25px;
+    font-size: 18px;
+    font-family: inherit;
+    font-weight: 400;
+    border-radius: 50px;
+    background-color: #5a52c3;
+    color: #fff;
+    border: 0;
+    line-height: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+.kahun-button:hover {
+    background-color: #292374;
+}
+
+.code-box { margin-bottom: 10px;}
+.code-box:last-child { margin-bottom: 0; }
+.code-box .code-toolbar{
+    position: relative;
+}
+.code-box .toolbar {
+    position: absolute;
+    top: -25px;
+    right: 0px;
+}
+:not(pre)>code[class*=language-], pre[class*=language-] {
+    background: #f7f7f9;
+    font-size: 14px;
+}
+
+
