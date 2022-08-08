@@ -47,21 +47,30 @@ function generateCode() {
             break;
         }
     }
+    if (windowAlign) {
+        document.querySelector('#kahun-patient').setAttribute("data-window-alignment", windowAlign);
+        onKahunLoaded();
+    }
     const locale = document.querySelector('#locale').value;
     if (locale) {
         widgetSettings.locale = locale;
         widgetSettingsCopy.locale = locale;
+    }
+    const utmString = document.querySelector('#utmString').value;
+    if (utmString) {
+        widgetSettings.utmString = utmString;
+        widgetSettingsCopy.utmString = utmString;
     }
     const onCompletionUrl = document.querySelector('#onCompletionUrl').value;
     if (onCompletionUrl) {
         widgetSettings.onCompletionUrl = onCompletionUrl;
         widgetSettingsCopy.onCompletionUrl = onCompletionUrl;
     }
-    if (locale) {
-        widgetSettings.locale = locale;
-        widgetSettingsCopy.locale = locale;
+    const onAbandonUrl = document.querySelector('#onAbandonUrl').value;
+    if (onAbandonUrl) {
+        widgetSettings.onAbandonUrl = onAbandonUrl;
+        widgetSettingsCopy.onAbandonUrl = onAbandonUrl;
     }
-
 
     document.querySelector('#htmlCode').innerHTML = defaultHtml.replace('{windowAlign}',windowAlign?' data-window-alignment="' + windowAlign + '"':'');
     document.querySelector('#jsCode').innerHTML = defaultJs.replace('{caseProps}',caseProps?caseProps:'').replace('{widgetSettings}',widgetSettings && Object.keys(widgetSettings).length>0?JSON.stringify(widgetSettingsCopy):'');
