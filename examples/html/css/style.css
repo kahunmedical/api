@@ -55,6 +55,9 @@ main {
     font-size: 16px;
     width: 100%;
 }
+.small {
+    font-size: 16px;
+}
 .generator {
     display: flex;
     gap: 10px;
@@ -71,6 +74,13 @@ main {
 }
 .generated-code {
     max-width: calc(100% - 440px);
+}
+.status-box {
+    padding: 20px;
+}
+#terminal {
+    overflow: auto;
+    height: 120px;
 }
 .form-row {
     display: flex;
@@ -141,6 +151,14 @@ div.code-toolbar>.toolbar>.toolbar-item>button {
 .reset-button {
     margin-left: auto;
 }
+#closeWidget {
+    position: fixed;
+    display: none;
+    top: 10px;
+    right: 10px;
+    z-index: 1600;
+}
+
 .big-input {
     width: 100%;
 }

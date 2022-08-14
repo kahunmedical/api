@@ -20,10 +20,6 @@
         <h1>Partner Integration API - HTML Widget Demo</h1>
     </header>
     <main>
-        <div class="buttons-box">
-            <button class="kahun-button fade-in" id="kahunButton" onclick="startKahunChat()">Start Chat</button>
-        </div>
-        <div class="status-box"></div>
         <div class="generator">
             <div class="border-box">
                 <form name="genForm" id="genForm" action="">
@@ -116,9 +112,17 @@
                 <div class="code-box"><div class="code-box-title">Js</div><pre><code id="jsCode" class="language-js"></code></pre></div>
             </div>
          </div>
+        <div class="buttons-box">
+            <button class="kahun-button fade-in" id="kahunButton" onclick="startKahunChat()">Start Chat</button>
+        </div>
+        <div class="status-box">
+            <div class="small">Chat status:</div>
+            <div class="border-box" id="terminal"></div>
+        </div>
     </main>
     <footer>
 
     </footer>
+    <span id="closeWidget" class="right"><button class="form-button reset-button" onclick="closeWidget()">X Close the widget</button></span>
 </body>
 </html>
