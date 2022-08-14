@@ -49,6 +49,7 @@ async function onKahunLoaded() {
         printToStatus(`<i>Progress:</i> ${evt.progress}%`);
     })
     kahunCaseRecord.on("done", (evt) => {
+        toggleCloseButton(false);
         printToStatus("<strong>User has completed the chat</strong>");
     })
 }
@@ -57,6 +58,10 @@ async function startKahunChat() {
     await kahunCaseRecord.startChatBotWidget(widgetSettings1);
 }
 
+function generateNewCode() {
+    generateCode();
+    onKahunLoaded();
+}
 function generateCode() {
     clearStatus();
     let caseProps = "";
@@ -127,7 +132,6 @@ function generateCode() {
     document.querySelector('#jsCode').innerHTML = defaultJs.replace('{caseProps}',caseProps?caseProps:'').replace('{widgetSettings}',widgetSettingsStr);
     Prism.highlightAll();
 
-    onKahunLoaded();
     reloadButton();
 }
 
@@ -140,6 +144,7 @@ function resetCode() {
     document.querySelector('#genForm').reset();
     document.querySelector('#kahun-patient').removeAttribute("data-window-alignment");
     generateCode();
+    onKahunLoaded();
 }
 
 function reloadButton() {

@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="js/prism.js" defer></script>
     <script src="js/script.js"></script>
-    <script src="https://patient.kahun.com/api/clientapi.js" onload="onKahunLoaded()" async></script>
+    <script src="https://patient.kahun.com/api/clientapi.js" async></script>
 </head>
 <body>
     <div id="kahun-patient"></div>
@@ -102,7 +102,7 @@
                 </div>
 
                 <div class="form-row">
-                    <button type="button" class="form-button generate-button" onclick="generateCode()">Generate</button>
+                    <button type="button" class="form-button generate-button" onclick="generateNewCode()">Generate</button>
                     <button type="button" class="form-button reset-button" onclick="resetCode()">Reset</button>
                 </div>
                 </form>
