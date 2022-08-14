@@ -49,6 +49,7 @@ async function onKahunLoaded() {
         printToStatus(`<i>Progress:</i> ${evt.progress}%`);
     })
     kahunCaseRecord.on("done", (evt) => {
+        toggleCloseButton(false);
         printToStatus("<strong>User has completed the chat</strong>");
     })
 }
