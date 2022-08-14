@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Partner Integration API - HTML Demo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/prism.js" defer></script>
+    <script src="js/script.js"></script>
+    <script src="https://patient.kahun.com/api/clientapi.js" onload="onKahunLoaded()" async></script>
+</head>
+<body>
+    <div id="kahun-patient"></div>
+    <header>
+        <img src="img/logo.png" alt="Kahun">
+        <h1>Partner Integration API - HTML Widget Demo</h1>
+    </header>
+    <main>
+        <div class="generator">
+            <div class="border-box">
+                <form name="genForm" id="genForm" action="">
+                <div class="form-row"><label class="section-toggle open" onclick="toggleSection(this,'#widgetSettings')">Widget Settings</label></div>
+                <div id="widgetSettings" class="form-section open">
+                    <div class="form-row">
+                       <label class="form-label">Window alignment:</label>
+                    </div>
+                    <div class="form-row form-checkboxes">
+                        <div class="form-check">
+                            <input type="radio" id="leftAlign" value="left" name="windowAlign">
+                            <label class="form-check-label" for="leftAlign">Left (default)</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="rightAlign" value="right" name="windowAlign">
+                            <label class="form-check-label" for="rightAlign">Right</label>
+                        </div>
+                        <div class="form-check">
+                           <input type="radio" id="centerAlign" value="center" name="windowAlign">
+                           <label class="form-check-label" for="centerAlign">Center</label>
+                       </div>
+                        <div class="form-check">
+                           <input type="radio" id="fullscreenAlign" value="fullscreen" name="windowAlign">
+                           <label class="form-check-label" for="fullscreenAlign">Full screen</label>
+                       </div>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" for="locale">Locale:</label>
+                        <select class="form-input form-select" id="locale" name="locale">
+                            <option value="">Choose locale</option>
+                            <option value="en">English (default)</option>
+                            <option value="he">Hebrew</option>
+                            <option value="fr">French</option>
+                            <option value="es">Spanish</option>
+                            <option value="pt">Portuguese</option>
+                        </select>
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" for="utmString">utmString:</label>
+                        <input type="text" class="form-input big-input" id="utmString" name="utmString">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" for="onCompletionUrl">onCompletionUrl:</label>
+                        <input type="text" class="form-input big-input" id="onCompletionUrl" name="onCompletionUrl">
+                    </div>
+                    <div class="form-row">
+                        <label class="form-label" for="onAbandonUrl">onAbandonUrl:</label>
+                        <input type="text" class="form-input big-input" id="onAbandonUrl" name="onAbandonUrl">
+                    </div>
+                </div>
+
+                <div class="form-row"><label class="section-toggle" onclick="toggleSection(this,'#initialDataSec')">Initial data</label></div>
+                <div id="initialDataSec" class="form-section">
+                    <div class="form-row">
+                        <label class="form-label label-with-button" for="initialData">
+                            <button type="button" class="form-plain-button" onclick="addDemoData()">Insert demo data</button>
+                        </label>
+                        <textarea name="initialData" id="initialData" class="form-input big-input" rows="6"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row"><label class="section-toggle" onclick="toggleSection(this,'#textOverrides')">Text Overrides</label></div>
+                <div id="textOverrides" class="form-section">
+                <div class="form-row">
+                    <label class="form-label" for="welcomePatient">Top welcome text:</label>
+                    <textarea class="form-input big-input" id="welcomePatient" name="welcomePatient" rows="2"></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="welcomePartners">Main welcome text:</label>
+                    <textarea class="form-input big-input" id="welcomePartners" name="welcomePartners" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="thankYouPatient">Thank you text:</label>
+                    <textarea class="form-input big-input" id="thankYouPatient" name="thankYouPatient" rows="2"></textarea>
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="thanksSubTitle">Additional thank you text:</label>
+                    <textarea class="form-input big-input" id="thanksSubTitle" name="thanksSubTitle" rows="3"></textarea>
+                </div>
+                </div>
+
+                <div class="form-row">
+                    <button type="button" class="form-button generate-button" onclick="generateCode()">Generate</button>
+                    <button type="button" class="form-button reset-button" onclick="resetCode()">Reset</button>
+                </div>
+                </form>
+            </div>
+            <div class="border-box generated-code">
+                <div class="code-box"><div class="code-box-title">HTML</div><pre><code id="htmlCode" class="language-html" data-prismjs-copy="Copy"></code></pre></div>
+                <div class="code-box"><div class="code-box-title">Js</div><pre><code id="jsCode" class="language-js"></code></pre></div>
+            </div>
+         </div>
+        <div class="buttons-box">
+            <button class="kahun-button fade-in" id="kahunButton" onclick="startKahunChat()">Start Chat</button>
+        </div>
+        <div class="status-box">
+            <div class="small">Chat status:</div>
+            <div class="border-box" id="terminal"></div>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+    <span id="closeWidget" class="right"><button class="form-button reset-button" onclick="closeWidget()">X Close the widget</button></span>
+</body>
+</html>
