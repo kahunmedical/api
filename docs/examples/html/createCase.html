@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../../favicon.png">
+    <meta property="og:title" content="Partner Integration API - Create New Patient Interaction Case Record" />
+    <meta property="og:image" content="../../favicon.png" />
+    <title>Partner Integration API - Create New Patient Interaction Case Record</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/prism.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/prism.js" defer></script>
+    <script src="js/script.js"></script>
+    <script src="js/connect.js"></script>
+    <script src="js/indent.min.js"></script>
+</head>
+<body>
+    <div id="kahun-patient"></div>
+    <header>
+        <img src="img/logo.png" alt="Kahun" class="logo">
+        <h1>Partner Integration API - Create New Patient Interaction Case Record</h1>
+        <a href="widget.html" class="header-link">Widget demo</a>
+    </header>
+    <main>
+        <div class="generator">
+            <div class="border-box gen-box">
+                <form name="connectForm" id="connectForm" action="">
+                <div class="form-row">
+                    <label class="form-label" for="apiKey">API key:</label>
+                    <input type="text" class="form-input big-input" id="apiKey" name="x-api-key" placeholder="Provided api key" value="DuISmyrBbuac2EjGTAxYgatyQTPDKmM53sYbxt3M">
+                </div>
+                <div class="form-row">
+                    <label class="form-label" for="clinicId">Clinic ID:</label>
+                    <input type="text" class="form-input big-input" id="clinicId" name="x-kahun-clinic-id" placeholder="Provided clinic ID" value="8cd2276a-235c-4bda-8b6d-892146788ea6">
+                </div>
+                <div class="form-row"><label class="section-toggle open" onclick="toggleSection(this,'#initialDataSec')">Initial clinical and demographic data</label></div>
+                <div id="initialDataSec" class="form-section open">
+                    <div class="form-row">
+                        <label class="form-label label-with-button" for="initialData">
+                            <button type="button" class="form-plain-button" onclick="addDemoData('#initialData')">Insert demo data</button>
+                        </label>
+                        <textarea name="initialData" id="initialData" class="form-input big-input" rows="6"></textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <button type="button" class="form-button generate-button" id="connectButton" onclick="connectToApi()">Create</button>
+                    <button type="button" class="form-button reset-button" onclick="resetCode()">Reset</button>
+                </div>
+                </form>
+            </div>
+            <div class="response-box border-box">
+                <div class="small" style="margin-bottom: 10px"><strong>Response:</strong></div>
+                <pre><code id="terminal" class="language-js" style="min-height: 400px;"></code></pre>
+                <div class="case-links" id="caseLinks"></div>
+            </div>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+</body>
+</html>
