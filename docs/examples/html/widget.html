@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../../favicon.png">
+    <meta property="og:title" content="Partner Integration API - HTML Demo" />
+    <meta property="og:image" content="../../favicon.png" />
     <title>Partner Integration API - HTML Demo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/prism.css">
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://patient-dev.kahun.com/api/clientapi.js" async></script>
     <script src="js/prism.js" defer></script>
     <script src="js/script.js"></script>
-    <script src="https://patient.kahun.com/api/clientapi.js" async></script>
+    <script src="js/widget.js"></script>
+    <script src="js/indent.min.js"></script>
 </head>
 <body>
     <div id="kahun-patient"></div>
     <header>
-        <img src="img/logo.png" alt="Kahun">
+        <img src="img/logo.png" alt="Kahun" class="logo">
         <h1>Partner Integration API - HTML Widget Demo</h1>
+        <a href="createCase.html" class="header-link">Create patient case demo</a>
     </header>
     <main>
         <div class="generator">
-            <div class="border-box">
+            <div class="border-box gen-box">
                 <form name="genForm" id="genForm" action="">
                 <div class="form-row"><label class="section-toggle open" onclick="toggleSection(this,'#widgetSettings')">Widget Settings</label></div>
                 <div id="widgetSettings" class="form-section open">
@@ -75,7 +81,7 @@
                 <div id="initialDataSec" class="form-section">
                     <div class="form-row">
                         <label class="form-label label-with-button" for="initialData">
-                            <button type="button" class="form-plain-button" onclick="addDemoData()">Insert demo data</button>
+                            <button type="button" class="form-plain-button" onclick="addDemoData('#initialData')">Insert demo data</button>
                         </label>
                         <textarea name="initialData" id="initialData" class="form-input big-input" rows="6"></textarea>
                     </div>
@@ -100,7 +106,6 @@
                     <textarea class="form-input big-input" id="thanksSubTitle" name="thanksSubTitle" rows="3"></textarea>
                 </div>
                 </div>
-
                 <div class="form-row">
                     <button type="button" class="form-button generate-button" onclick="generateNewCode()">Generate</button>
                     <button type="button" class="form-button reset-button" onclick="resetCode()">Reset</button>
@@ -113,11 +118,14 @@
             </div>
          </div>
         <div class="buttons-box">
-            <button class="kahun-button fade-in" id="kahunButton" onclick="startKahunChat()">Start Chat</button>
+            <button class="kahun-button" id="kahunButton" onclick="startKahunChat()">Start Chat</button>
         </div>
-        <div class="status-box">
-            <div class="small">Chat status:</div>
-            <div class="border-box" id="terminal"></div>
+        <div class="status-row">
+            <div id="chatPlaceHolder"></div>
+            <div class="status-box">
+                <div class="small">Chat status:</div>
+                <div class="border-box" id="terminal"></div>
+            </div>
         </div>
     </main>
     <footer>
