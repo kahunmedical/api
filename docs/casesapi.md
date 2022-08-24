@@ -143,21 +143,34 @@ Example:
 These are the supported custom fields:
 <table>
   <tr>
-   <td><em>FIELD</em>
+   <td><em>Field</em>
    </td>
-   <td><em>DESCRIPTION</em>
+   <td><em>Description</em>
    </td>
+   <td><em>Screenshot</em></td>
   </tr>
   <tr>
    <td>WELCOME_PATIENT
    </td>
-   <td>Text that the patient will see in the Patient1st welcome screen 
+   <td>Welcome text appearing at top of cover page 
+   </td>
+  </tr>
+  <tr>
+   <td>WELCOME_PARTNERS
+   </td>
+   <td>Main text of welcome cover page 
    </td>
   </tr>
   <tr>
    <td>THANK_YOU_PATIENT
    </td>
-   <td>Text that the patient will see in the Patient1st Thank you screen 
+   <td>Customized thank you text 
+   </td>
+  </tr>
+  <tr>
+   <td>THANKS_SUB_TITLE
+   </td>
+   <td>Additional thank you page content
    </td>
   </tr>
 </table>
@@ -168,9 +181,9 @@ The response is a JSON document with the following properties. All values below 
 
 <table>
   <tr>
-   <td><em>FIELD</em>
+   <td><em>Field</em>
    </td>
-   <td><em>DESCRIPTION</em>
+   <td><em>Description</em>
    </td>
   </tr>
   <tr>
@@ -553,7 +566,7 @@ Here is a list of supported alignment variations:
   <tr>
    <td>Attribute value</td>
    <td>Description</td>
-   <td>Screenshoot</td>
+   <td>Screenshot</td>
   </tr>
   <tr>
    <td>data-window-alignment="left" </td>
@@ -564,7 +577,7 @@ Here is a list of supported alignment variations:
   </tr>
   <tr>
    <td>data-window-alignment="right" </td>
-   <td>Window is aligned to the <strong>right</strong> side of the screen (default)</td>
+   <td>Window is aligned to the <strong>right</strong> side of the screen</td>
    <td>
     <img src="window_alignment_right.png" width="" alt="alt_text" title="image_tooltip">
    </td>
@@ -610,7 +623,7 @@ Here is a list of supported alignment variations:
    </td>
    <td>Description
    </td>
-   <td>Screenshoot
+   <td>Screenshot
    </td>
   </tr>
   <tr>
@@ -824,7 +837,7 @@ use _.kahun-container_
 For example, to make the widget look properly placed in the page you may append this css rule to your HTML page:
 
 ```css
-patient .kahun-container {
+#kahun-patient .kahun-container {
     left: 0;
     bottom: 40px;
     position: fixed;
