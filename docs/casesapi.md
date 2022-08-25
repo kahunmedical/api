@@ -181,7 +181,7 @@ These are the supported text overrides:
    </td>
   </tr>
 </table>
-_*The Thank-you screen is optional and will be displayed depending on the current clinic's settings, to change the settings please contact Kahun's staff._
+*The Thank-you screen is optional and will be displayed depending on the current clinic's settings, to change the settings please contact Kahun's staff.
 
 #### Response
 
