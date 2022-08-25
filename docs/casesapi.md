@@ -24,13 +24,13 @@ Postman (postman.com) is a free tool for testing APIs. We provide a Postman coll
 Remember to configure the collection and add your provided CLINIC_ID and API_KEY to the Variables Section.
 
 <a href="./postman_collection.json" download>Download Postman Collection</a>
- 
+
 
 ### **API Key**
 
 In order to use the API, you will be provided an API key which should be passed as a header on all HTTPS POST requests
 to the API. \
-The format of the header is: 
+The format of the header is:
 
 <table>
   <tr>
@@ -132,7 +132,7 @@ Example:
 * **Text Overrides** \
   Each request can also have a overrides object, which enables to customize texts shown in the Patient1st application. You can customize text using plain text or html formatted text.\
   \
- To use html formatting, your entire content should be enclosed in a valid html tag (for example, a `<div>` tag). 
+  To use html formatting, your entire content should be enclosed in a valid html tag (for example, a `<div>` tag).
 
 ```json
 {
@@ -313,7 +313,7 @@ The navigation advice is included, when available, as part of the summary JSON r
 | id             | An id string which uniquely identifies this navigation advice                         |
 
 ##### Navigation Advice Levels
-Several variants of navigation advice will have the same numeric level, if they represent approximately the same level of urgency, or the same time frame for seeking care. 
+Several variants of navigation advice will have the same numeric level, if they represent approximately the same level of urgency, or the same time frame for seeking care.
 Note that additional navigation advice verbiage may be added in the future, so it is best to rely on the *level* field for any programmatic action.
 
 | <em>Level</em> | <em>Navigation Advice</em>                   |
@@ -402,7 +402,7 @@ Kahun Clinic ID.
 
 ### **Limitations**
 
-Only one webhook can be defined per Kahun Clinic ID. 
+Only one webhook can be defined per Kahun Clinic ID.
 
 The Kahun system will retry delivery of notifications only a limited number of times. To use webhook integration, you
 must provide a service with enough capacity for the expected rate of notifications.
@@ -484,6 +484,7 @@ Using the SDK, you can do the following within your web site:
 * Host the Kahun Chatbot as a widget running within your own website
 * Retrieve case insights such as text summary, navigation advice, and likely diagnosis directly to the web page. 
 
+
 ### SDK Script Tag
 
 To use the SDK on a webpage, include the Kahun script tag within the `head` tag of the page.
@@ -532,6 +533,7 @@ declare namespace Kahun {
 Use to create a new case record which will be assigned a unique id in the Kahun system.
 
 
+
 | <em>Parameter</em>    | <em>Description</em> |    
 |--------------|-------------------------------|
 | apiKey       | The api key provided to you   |
@@ -574,7 +576,9 @@ declare namespace Kahun {
 }
 ```
 **`Kahun.existingCaseRecord({...params})`**
+
 Use to perform operations or get information using an existing case id. 
+
 
 For example, the case record may have been created through the server-to-server flow, or perhaps through a different web page, and has been passed to this page.
 
@@ -594,7 +598,88 @@ For example, the case record may have been created through the server-to-server 
        caseId: "<previously created case id>"
     });
     console.log("The status of this case is", kahunCaseRecord.getStatus())
+
 ```
+
+### Case Record Object
+```typescript
+interface CaseRecord {
+  getCaseId(): string; // the id of the case
+  getLinks(): Record<string, string>; // get urls for summary,pdf,patient,and provider web resources
+  getStatus(): "ABANDONED" | "COMPLETED" | "IN_PROGRESS" | "CREATED";  
+  generateSummary(): Promise<object>; // generate and receive summary output
+  startChatBotWidget(settings?: WidgetSettings): Promise<boolean>; // launch the chatbot as a page widget
+  removeChatBotWidget(): void; // remove the chatbot widget from the page
+  on(name: string, cb: any); // register for events
+  removeListener(name: string, cb: any); //  unregister for events
+}
+```
+The CaseRecord object is returned when creating a new case, or accessing an existing case. This provides the main API for functionality relating to the case.
+
+#### getCaseId
+
+Returns the unique id for the case.
+
+#### getLinks
+
+Returns an object containing urls to various web services.
+<table>
+  <tr>
+   <td><em>FIELD</em>
+   </td>
+   <td><em>DESCRIPTION</em>
+   </td>
+  </tr>
+  <tr>
+   <td>patient
+   </td>
+   <td>A URL link for the patient of Kahun’s Patient1st application. This link can be shared with the patient.
+   </td>
+  </tr>
+  <tr>
+   <td>provider
+   </td>
+   <td>A URL link for the physician which displays the Patient Card web interface. The Patient Card displays the summary and Kahun’s insights relating to the patient background and present findings. 
+   </td>
+  </tr>
+  <tr>
+   <td>summary
+   </td>
+   <td>A URL link to a JSON document representing a textual summary for the patient case.
+   </td>
+  </tr>
+  <tr>
+   <td>pdf
+   </td>
+   <td>A URL link which downloads a pdf document with a formatted version of the summary information
+   </td>
+  </tr>
+</table>
+
+#### getStatus
+Returns the current status of the interaction.
+
+#### generateSummary
+Returns a promise which resolves to the _Summary Output Document_. This JSON object contains the textual summary, navigation advice, and differencial diagnosis.
+It is best to wait until the case is no longer in progress (status will be either "COMPLETED" or "ABANDONED") before generating the summary.
+
+The format of the returned object is the same as for the REST API. See [Summary Resource](#summary-format)
+
+### ChatBot Widget
+
+Kahun’s chatbot can be run as an integrated HTML element embedded in your page. The chatbot is launched and controlled using the CaseRecord API
+
+Note: You do not have to integrate the chat bot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
+desktop and mobile. To launch the standalone application, launch the url which is provided under the _patient_ property returned when the case record was created, or returned from the `kahunCaseRecord.getLinks()` API call.
+
+
+#### **HTML Integration**
+
+In order to integrate a widget-like element in your HTML page, take the following steps:
+
+##### Div Tag
+
+1. Include the Kahun script tag as descibed above.
 
 ### Case Record Object
 ```typescript
@@ -680,6 +765,7 @@ In order to integrate a widget-like element in your HTML page, take the followin
    The div element should have the following id: id=”kahun-patient” . Kahun code will place the widget into the DOM
    within the div you have provided. \
    \
+
    The div tag is configured using html attributes below. 
 
 ```html

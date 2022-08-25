@@ -22,7 +22,6 @@ async function onKahunLoaded() {
         apiKey: "DuISmyrBbuac2EjGTAxYgatyQTPDKmM53sYbxt3M",
         clinicId: "8cd2276a-235c-4bda-8b6d-892146788ea6",
         clinicalData,
-        "overrides":overrides,
     });
         kahunCaseRecord.on("widget_state", (evt) => {
         console.log('state:', evt.state);
@@ -56,7 +55,7 @@ function generateWidgetCode() {
     let caseProps = "";
 
     let widgetSettingsCopy = {};
-    clinicalData = null;
+    clinicalData = {};
     overrides = {};
     wSettings = {};
     const winAlignOptions = document.querySelectorAll("input[name='windowAlign']")
@@ -87,11 +86,8 @@ function generateWidgetCode() {
         widgetSettingsCopy.onAbandonUrl = onAbandonUrl;
     }
     const initialData = stringValue('#initialData');
-    if (initialData) {
-        //let parsedInitialData = JSON.parse(initialData);
-        clinicalData = JSON.parse(initialData);
-        caseProps = "\nclinicalData:" + initialData;
-    }
+    if (initialData) clinicalData = JSON.parse(initialData);
+
     const welcomePatient = stringValue('#welcomePatient');
     if (welcomePatient) {
         overrides.WELCOME_PATIENT = welcomePatient
@@ -108,7 +104,15 @@ function generateWidgetCode() {
     if (thanksSubTitle) {
         overrides.THANKS_SUB_TITLE = thanksSubTitle
     }
-    if (Object.keys(overrides).length > 0) caseProps += (caseProps?",":"") + "\n\"overrides\":" + JSON.stringify(overrides)
+
+    if (Object.keys(overrides).length > 0) {
+        clinicalData.overrides = overrides
+    }
+    if (clinicalData) {
+        //let parsedInitialData = JSON.parse(initialData);
+        caseProps = "\nclinicalData:" + JSON.stringify(clinicalData).replaceAll('{','{\n').replaceAll('}','\n}').replaceAll(',',',\n');
+        console.log(caseProps);
+    }
 
     let widgetSettingsStr = '';
     if (widgetSettingsCopy && Object.keys(widgetSettingsCopy).length>0) {
