@@ -20,7 +20,7 @@ const defaultHtml = `&lt;script src="https://patient.kahun.com/api/clientapi.js"
 async function onKahunLoaded() {
     kahunCaseRecord = await Kahun.newCaseRecord({
         apiKey: "DuISmyrBbuac2EjGTAxYgatyQTPDKmM53sYbxt3M",
-        clinicId: "8cd2276a-235c-4bda-8b6d-892146788ea6",
+        clinicId: "0e50ee14-afa9-406c-aaf2-8410dd7b0e3d",
         clinicalData,
     });
         kahunCaseRecord.on("widget_state", (evt) => {

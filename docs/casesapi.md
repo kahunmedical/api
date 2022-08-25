@@ -17,7 +17,7 @@ partner can:
   the interaction.
 
 _The REST API is intended to be used for server-to-server communication, and not directly from a web-browser.
-To interact with Kahun in a client-side context, e.g. from a webpage on your system, please see the Web Browser SDK section_
+To interact with Kahun in a client-side context, e.g. from a webpage on your system, please see the [Web Browser SDK section](#sdk)_
 
 ### **Postman Collection**
 Postman (postman.com) is a free tool for testing APIs. We provide a Postman collection which you can import to try out the API described in this document and see working examples.  
@@ -69,7 +69,7 @@ URL:  [https://api.kahun.com/cases](https://api.kahun.com/cases)
 Method: POST
 
 #### Headers:
-
+ 
 <table>
   <tr>
    <td>x-api-key
@@ -107,8 +107,7 @@ This will create a case record with no initial patient information.
   API (see _[https://docs.athenahealth.com/api/docs/charts](https://docs.athenahealth.com/api/docs/charts)_), but is
   general enough to be created from a variety of source data.
 
-Example:
-
+**Example**
 ```json
 {
   "caseFormat": "athena",
@@ -137,90 +136,66 @@ Example:
 ```json
 {
   "overrides": {
-    "WELCOME_PATIENT": "Welcome text appearing at top of cover page",
-    "WELCOME_PARTNERS":  "Main text of welcome cover page",
+    "WELCOME_PATIENT": "The text appearing at top of welcome screen",
+    "WELCOME_PARTNERS":  "Main text of welcome screen",
     "THANK_YOU_PATIENT": "Customized thank you text",
     "THANKS_SUB_TITLE": "Additional thank you page content"
   }
 }
 ```
 
-These are the supported custom fields:
+These are the supported text overrides:
+
 <table>
   <tr>
    <td><em>FIELD</em>
    </td>
    <td><em>DESCRIPTION</em>
    </td>
+   <td><em>SCREENSHOT</em></td>
   </tr>
   <tr>
    <td>WELCOME_PATIENT
    </td>
-   <td>Text that the patient will see in the Patient1st welcome screen 
+   <td>Text that the patient will see at the top of Patient1st welcome screen 
+   </td>
+   <td rowspan="2"><img src="welcomeScreenShot.png" alt="Override welcome text"></td>
+  </tr>
+  <tr>
+    <td>WELCOME_PARTNERS
+   </td>
+   <td>Text that the patient will see at the center of Patient1st welcome screen 
    </td>
   </tr>
   <tr>
    <td>THANK_YOU_PATIENT
    </td>
-   <td>Text that the patient will see in the Patient1st Thank you screen 
+   <td>Text that the patient will see at the end of a chat on Patient1st Thank-you screen* 
+   </td>
+   <td rowspan="2"><img src="thankYouScreenshot.png" alt="Thank you screen shot"/></td>
+  </tr>
+  <tr>
+   <td>THANKS_SUB_TITLE
+   </td>
+   <td>Additional text that the patient will see at the end of a chat on Patient1st Thank-you screen* 
    </td>
   </tr>
 </table>
+_*The Thank-you screen is optional and will be displayed depending on the current clinic's settings, to change the settings please contact Kahun's staff._
 
 #### Response
 
 The response is a JSON document with the following properties. All values below are of type string.
 
-<table>
-  <tr>
-   <td><em>FIELD</em>
-   </td>
-   <td><em>DESCRIPTION</em>
-   </td>
-  </tr>
-  <tr>
-   <td>patient
-   </td>
-   <td>A URL link for the patient of Kahun’s Patient1st application. This link can be shared with the patient.
-   </td>
-  </tr>
-  <tr>
-   <td>provider
-   </td>
-   <td>A URL link for the physician which displays the Patient Card web interface. The Patient Card displays the summary and Kahun’s insights relating to the patient background and present findings. 
-   </td>
-  </tr>
-  <tr>
-   <td>status
-   </td>
-   <td>A URL link to a JSON document providing the current status of the interaction. This link can be periodically polled to receive updated status.
-   </td>
-  </tr>
-  <tr>
-   <td>summary
-   </td>
-   <td>A URL link to a JSON document representing a textual summary for the patient case.
-   </td>
-  </tr>
-  <tr>
-   <td>widgetSettings
-   </td>
-   <td>Attributes which can be passed to the front-end widget in order to initialize the patient-facing application (see Widget section below).
-   </td>
-  </tr>
-  <tr>
-   <td>caseId
-   </td>
-   <td>The unique ID for this case record
-   </td>
-  </tr>
-  <tr>
-   <td>pdf
-   </td>
-   <td>A URL link which downloads a pdf document with a formatted version of the summary information
-   </td>
-  </tr>
-</table>
+| <em>FIELD</em> | <em>DESCRIPTION</em>                                                                                                                                                                            |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| patient        | A URL link for the patient of Kahun’s Patient1st application. This link can be shared with the patient.                                                                                         |
+| provider       | A URL link for the physician which displays the Patient Card web interface. The Patient Card displays the summary and Kahun’s insights relating to the patient background and present findings. |
+| status         | A URL link to a JSON document providing the current status of the interaction. This link can be periodically polled to receive updated status.                                                  |
+| summary        | A URL link to a JSON document representing a textual summary for the patient case.                                                                                                              |
+| widgetSettings | Attributes which can be passed to the front-end widget in order to initialize the patient-facing application (see Widget section below).                                                        |
+| caseId         | The unique ID for this case record                                                                                                                                                              |
+| pdf            | A URL link which downloads a pdf document with a formatted version of the summary information                                                                                                   |
 
 ### **Retrieving the Case Summary**
 
@@ -333,9 +308,6 @@ Note that additional navigation advice verbiage may be added in the future, so i
 | 9              | Office or Video visit within 2 Weeks         |
 | 10             | Home Care                                    |
 
-
-
-
 ### **Retrieving the status of the case record**
 
 The status is retrieved from the ‘status’ link, which is returned when the case record is created.
@@ -353,44 +325,11 @@ The status is a JSON document:
 }
 ```
 
-<table>
-  <tr>
-   <td><em>FIELD</em>
-   </td>
-   <td><em>TYPE</em>
-   </td>
-   <td><em>DESCRIPTION</em>
-   </td>
-  </tr>
-  <tr>
-   <td>status
-   </td>
-   <td>string
-   </td>
-   <td>CREATED: Case was created. Patient did not answer a question yet.
-<p>
-IN_PROGRESS: Patient answered at least one question but did not complete the conversation.
-<p>
-COMPLETED: Patient completed the conversation. 
-   </td>
-  </tr>
-  <tr>
-   <td>questionCount
-   </td>
-   <td>number
-   </td>
-   <td>The number of questions the patient answered. 
-   </td>
-  </tr>
-  <tr>
-   <td>conversationProgress
-   </td>
-   <td>number
-   </td>
-   <td>An approximate progress in percentage. This is a heuristic measure of the percentage of the clinical intake process that has been completed 
-   </td>
-  </tr>
-</table>
+| <em>FIELD</em>       | <em>TYPE</em> | <em>DESCRIPTION</em>                                                                                                                                                                                                           |    
+|----------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| status               | string        | <p>CREATED: Case was created. Patient did not answer a question yet.</p><p>IN_PROGRESS: Patient answered at least one question but did not complete the conversation.</p><p>COMPLETED: Patient completed the conversation.</p> |
+| questionCount        | number        | The number of questions the patient answered.                                                                                                                                                                                  |
+| conversationProgress | number        | An approximate progress in percentage. This is a heuristic measure of the percentage of the clinical intake process that has been completed                                                                                    |
 
 ## Webhook Integration
 
@@ -450,31 +389,16 @@ For detailed descriptions of the data fields, please see the previous sections
 The _status_, _conversationProgress_, and _patientSummary_ fields use the same format as the corresponding fields in the
 REST API.
 
-<table>
-  <tr>
-   <td><em>FIELD</em>
-   </td>
-   <td><em>DESCRIPTION</em>
-   </td>
-  </tr>
-  <tr>
-   <td>caseId
-   </td>
-   <td>The unique case record id which was returned when the case record was created.
-   </td>
-  </tr>
-  <tr>
-   <td>time
-   </td>
-   <td>The time of the status change
-   </td>
-  </tr>
-</table>
+
+| <em>FIELD</em> | <em>DESCRIPTION</em>                                                           |    
+|----------------|--------------------------------------------------------------------------------|
+| caseId         | The unique case record id which was returned when the case record was created. |
+| time           | The time of the status change                                                  |      
 
 ##### Patient Summary
 
 The patient summary is only included in the notification when the status has changed to either COMPLETED or ABANDONED.
-
+<a id="sdk"></a>
 ## Web Browser SDK
 
 The web-browser sdk allows a partner to integrate Kahun functionality with web pages hosted in their environment
@@ -494,9 +418,9 @@ https://patient.kahun.com/api/clientapi.js
 ```
 It is recommended to use the `async` or `defer` attribute so that tag loading will not affect page performance.
 
-Optionally,  use the `onload` attribute of the script tag to set a custom javascript function that will run when the library has been loaded. This is a good place for code that should interact with the SDK as soon as the page loads.  
+The script will automatically search for and run a function called `onKahunLoaded` that will run when the library has been loaded. This is a good place for code that should interact with the SDK as soon as the page loads.  
 
-Example
+**Example**
 ```html
 <head>
 <script>
@@ -504,7 +428,7 @@ Example
         //... ok to interact with the kahun sdk here
     }
 </script>    
-<script src="https://patient.kahun.com/api/clientapi.js" onload="onKahunLoaded()" async></script>
+<script src="https://patient.kahun.com/api/clientapi.js" async></script>
 </head>
 ```
 ##### Before you begin integration
@@ -532,13 +456,11 @@ declare namespace Kahun {
 **`Kahun.newCaseRecord({...params})`**
 Use to create a new case record which will be assigned a unique id in the Kahun system.
 
-
-
-| <em>Parameter</em>    | <em>Description</em> |    
-|--------------|-------------------------------|
-| apiKey       | The api key provided to you   |
-| clinicId     | The provided clinic id        |      
-| clinicalData | Optional. Use this to prepopulate information about the patient.<br>  See the [Initial clinical and demographic data](#Initial clinical and demographic data) section for a description of this format.|
+| <em>Parameter</em> | <em>Description</em>                                                                                                                                                                                    |    
+|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apiKey             | The api key provided to you                                                                                                                                                                             |
+| clinicId           | The provided clinic id                                                                                                                                                                                  |      
+| clinicalData       | Optional. Use this to prepopulate information about the patient.<br>  See the [Initial clinical and demographic data](#Initial clinical and demographic data) section for a description of this format. |
 
 Returns a promise which will resolve to the CaseRecord object for the newly created case.
 
@@ -564,7 +486,6 @@ Returns a promise which will resolve to the CaseRecord object for the newly crea
 #### Accessing an existing case record
 
 **Existing Case Record**
-
 ```typescript
 interface ExistingCaseParams {
     apiKey: string; // the APIKEY provided to you
@@ -812,7 +733,7 @@ Here is a list of supported alignment variations:
    <td>data-window-alignment="center"</td>
    <td>The window will open in a pop-up like view the middle of the screen with a dark background over the content of the page</td>
    <td>
-    <img src="winwo_aligment_center.png" width="" alt="alt_text" title="image_tooltip">
+    <img src="window_aligment_center.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
@@ -913,23 +834,22 @@ The widget emits events which can be sent to code on the page.
 
 To register a listener function to receive events use: `kahunCaseRecord.on(event-name, listener)`
 
-To unregister use: `kahunCaseRecord.removeListener(event-name, listener)`
+To unregister a listener use: `kahunCaseRecord.removeListener(event-name, listener)`
 
-Example:
+**Example**
 ```javascript
 kahunCaseRecord.on("done", (evt) => {
     console.log("user has completed the chat");
 })
 ```
 
-
 <table>
   <tr>
-   <td><em>Event</em>
+   <td><em>EVENT</em>
    </td>
-   <td><em>Description</em>
+   <td><em>DESCRIPTION</em>
    </td>
-   <td><em>Sample Payload</em>
+   <td><em>SAMPLE PAYLOAD</em>
    </td>
   </tr>
   <tr>
@@ -988,7 +908,7 @@ use _.kahun-container_
 For example, to make the widget look properly placed in the page you may append this css rule to your HTML page:
 
 ```css
-patient .kahun-container {
+#kahun-patient .kahun-container {
     left: 0;
     bottom: 40px;
     position: fixed;
@@ -1007,9 +927,9 @@ be added to alter the “open” button location
     left: 15%;
 }
 ```
-### Sample Client Code
-Here is a complete example which you can fork or copy, implementing a custom button, and widget initialization showing
-integration with the API:
+### Sample Code
+Here are examples which you can copy, implementing a custom button, widget initialization, and integration with the API:
 
-[https://codepen.io/kahunapi/pen/oNqBRZp](https://codepen.io/kahunapi/pen/rNJdvPq)
+[HTML Widget Code Generator](https://kahunmedical.github.io/api/examples/html/widget.html)
 
+[Patient Interaction Demo](https://kahunmedical.github.io/api/examples/html/createCase.html)
