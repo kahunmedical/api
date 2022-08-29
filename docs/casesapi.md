@@ -694,13 +694,7 @@ In order to integrate a widget-like element in your HTML page, take the followin
    The div tag is configured using html attributes below. 
 
 ```html
-
-<div
-        id="kahun-patient"
-        data-window-alignment="left" (optional)
-'
->
-</div>
+ <div id="kahun-patient" data-window-alignment="left (optional)"></div>
 ```
 
 
