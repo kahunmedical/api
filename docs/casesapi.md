@@ -12,7 +12,7 @@ partner can:
 * Generate a unique url link which can be shared with the patient. The link launches the patient interaction session.
 * Poll the system for the current status of the interaction.
 * Receive a text summary of the patient interaction.
-* Receive structured insights of the patient case, such as navigation advice and likely differencial diagnosis.
+* Receive structured insights of the patient case, such as navigation advice and likely differential diagnosis.
 * Get a link which launches a provider-facing interactive Patient Card which contains all information and insights from
   the interaction.
 
@@ -80,7 +80,7 @@ Method: POST
   <tr>
    <td>x-kahun-clinic-id
    </td>
-   <td>clinic Id from clinic management page
+   <td>clinic ID from clinic management page
    </td>
   </tr>
   <tr>
@@ -129,15 +129,15 @@ This will create a case record with no initial patient information.
 ```
 
 * **Text Overrides** \
-  Each request can also have a overrides object, which enables to customize texts shown in the Patient1st application. You can customize text using plain text or html formatted text.\
+  Each request can also have an overrides object, which enables to customize texts shown in the Patient1st application. You can customize text using plain text or html formatted text.\
   \
   To use html formatting, your entire content should be enclosed in a valid html tag (for example, a `<div>` tag).
 
 ```json
 {
   "overrides": {
-    "WELCOME_PATIENT": "The text appearing at top of welcome screen",
-    "WELCOME_PARTNERS":  "Main text of welcome screen",
+    "WELCOME_LOGO": "The text appearing at the title of the welcome page",
+    "WELCOME_PATIENT": "The text appearing at the beginning of the welcome text",
     "THANK_YOU_PATIENT": "Customized thank you text",
     "THANKS_SUB_TITLE": "Additional thank you page content"
   }
@@ -155,18 +155,22 @@ These are the supported text overrides:
    <td><em>SCREENSHOT</em></td>
   </tr>
   <tr>
-   <td>WELCOME_PATIENT
+   <td>WELCOME_LOGO</td>
+   <td>
+     The text appearing at the title of the welcome page<br>
+     <em>(Default: "Welcome to Patient1st")</em>
    </td>
-   <td>Text that the patient will see at the top of Patient1st welcome screen 
-   </td>
-   <td rowspan="2"><img src="welcomeScreenShot.png" alt="Override welcome text"></td>
+<td rowspan="2"><img src="welcomeScreenShot.png" alt="Override welcome text"></td>
   </tr>
   <tr>
-    <td>WELCOME_PARTNERS
+   <td>WELCOME_PATIENT</td>
+   <td>
+     The text appearing at the beginning of the welcome text<br>
+     <em>(Default: empty)</em>
    </td>
-   <td>Text that the patient will see at the center of Patient1st welcome screen 
-   </td>
+   
   </tr>
+  
   <tr>
    <td>THANK_YOU_PATIENT
    </td>
@@ -312,7 +316,7 @@ Note that additional navigation advice verbiage may be added in the future, so i
 
 The status is retrieved from the ‘status’ link, which is returned when the case record is created.
 
-The status link can be periodically polled and will return the current state of the record. In addition it will return
+The status link can be periodically polled and will return the current state of the record. In addition, it will return
 current links, as in the original response.
 
 The status is a JSON document:
@@ -403,7 +407,7 @@ The patient summary is only included in the notification when the status has cha
 
 The web-browser sdk allows a partner to integrate Kahun functionality with web pages hosted in their environment
 
-Using the SDK, you can do the following within your web site:
+Using the SDK, you can do the following within your website:
 * Create a new case record, and populate it with existing patient information
 * Host the Kahun Chatbot as a widget running within your own website
 * Retrieve case insights such as text summary, navigation advice, and likely diagnosis directly to the web page. 
@@ -531,8 +535,8 @@ interface CaseRecord {
   generateSummary(): Promise<object>; // generate and receive summary output
   startChatBotWidget(settings?: WidgetSettings): Promise<boolean>; // launch the chatbot as a page widget
   removeChatBotWidget(): void; // remove the chatbot widget from the page
-  on(name: string, cb: any); // register for events
-  removeListener(name: string, cb: any); //  unregister for events
+  subscribe(name: string, cb: any); // register for events
+  release(name: string, cb: any); //  unsregister for events
 }
 ```
 The CaseRecord object is returned when creating a new case, or accessing an existing case. This provides the main API for functionality relating to the case.
@@ -590,7 +594,7 @@ The format of the returned object is the same as for the REST API. See [Summary 
 
 Kahun’s chatbot can be run as an integrated HTML element embedded in your page. The chatbot is launched and controlled using the CaseRecord API
 
-Note: You do not have to integrate the chat bot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
+Note: You do not have to integrate the chatbot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
 desktop and mobile. To launch the standalone application, launch the url which is provided under the _patient_ property returned when the case record was created, or returned from the `kahunCaseRecord.getLinks()` API call.
 
 
@@ -600,7 +604,7 @@ In order to integrate a widget-like element in your HTML page, take the followin
 
 ##### Div Tag
 
-1. Include the Kahun script tag as descibed above.
+1. Include the Kahun script tag as described above.
 
 ### Case Record Object
 ```typescript
@@ -611,8 +615,8 @@ interface CaseRecord {
   generateSummary(): Promise<object>; // generate and receive summary output
   startChatBotWidget(settings?: WidgetSettings): Promise<boolean>; // launch the chatbot as a page widget
   removeChatBotWidget(): void; // remove the chatbot widget from the page
-  on(name: string, cb: any); // register for events
-  removeListener(name: string, cb: any); //  unregister for events
+  subscribe(name: string, cb: any); // register for events
+  release(name: string, cb: any); // unregister for events
 }
 ```
 The CaseRecord is object is returned when creating a new case, or accessing an existing case. This provides the main API for functionality relating to the case.
@@ -661,7 +665,7 @@ Returns an object containing urls to various web services.
 Returns the current status of the interaction.
 
 #### generateSummary
-Returns a promise which resolves to the _Summary Output Document_. This JSON object contains the textual summary, navigation advice, and differencial diagnosis. 
+Returns a promise which resolves to the _Summary Output Document_. This JSON object contains the textual summary, navigation advice, and differential diagnosis. 
 It is best to wait until the case is no longer in progress (status will be either "COMPLETED" or "ABANDONED") before generating the summary. 
 
 The format of the returned object is the same as for the REST API. See [Summary Resource](#summary-format)
@@ -670,7 +674,7 @@ The format of the returned object is the same as for the REST API. See [Summary 
 
 Kahun’s chatbot can be run as an integrated HTML element embedded in your page. The chatbot is launched and controlled using the CaseRecord API
 
-Note: You do not have to integrate the chat bot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
+Note: You do not have to integrate the chatbot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
 desktop and mobile. To launch the standalone application, launch the url which is provided under the _patient_ property returned when the case record was created, or returned from the `kahunCaseRecord.getLinks()` API call. 
 
 
@@ -680,7 +684,7 @@ In order to integrate a widget-like element in your HTML page, take the followin
 
 ##### Div Tag
 
-1. Include the Kahun script tag as descibed above.
+1. Include the Kahun script tag as described above.
 
 2. Create a div element on the page which will hold the widget.  \
    The div element should have the following id: id=”kahun-patient” . Kahun code will place the widget into the DOM
@@ -713,7 +717,7 @@ Here is a list of supported alignment variations:
   <tr>
    <td>Attribute value</td>
    <td>Description</td>
-   <td>Screenshoot</td>
+   <td>Screenshot</td>
   </tr>
   <tr>
    <td>data-window-alignment="left" </td>
@@ -738,11 +742,17 @@ Here is a list of supported alignment variations:
   </tr>
   <tr>
    <td>data-window-alignment="fullscreen"</td>
-   <td>This value is used for clients who wish to load the chat as a standalone app that takes over the entire content of the page.<p> NOTE: if in “fullscreen” mode the user cannot close/minimize the chat screen
-   </td>
+   <td>This value is used for clients who wish to load the chat as a standalone app that takes over the entire content of the page.<p> NOTE: if in “fullscreen” mode the user cannot close/minimize the chat screen</td>
    <td>
     <img src="window_aligment_fullscreen.png" width="" alt="alt_text" title="image_tooltip">
-</td>
+   </td>
+  </tr>
+  <tr>
+   <td>data-window-alignment="inline"</td>
+   <td>The widget will be placed <strong>within</strong> the content of the web page. The widget window's dimensions are set according to it's containing Div element (#kahu-patient) styling.</td>
+   <td>
+    <img src="window_aligment_fullscreen.png" width="" alt="alt_text" title="image_tooltip">
+   </td>
   </tr>
 </table>
 
@@ -761,7 +771,7 @@ interface WidgetSettings {
 
 ```
 ##### **Optional Widget Settings**
-A settings object can be passed to the `kahunCaseRecord.startChatBot(...)`  call to control behavior of the chat bot. All settings are optional.
+A settings object can be passed to the `kahunCaseRecord.startChatBot(...)`  call to control behavior of the chatbot. All settings are optional.
 
 <table>
   <tr>
@@ -832,9 +842,9 @@ If the widget is not currently open this will have no effect
 
 The widget emits events which can be sent to code on the page.
 
-To register a listener function to receive events use: `kahunCaseRecord.on(event-name, listener)`
+To register a listener function to receive events use: `kahunCaseRecord.subscribe(event-name, listener)`
 
-To unregister a listener use: `kahunCaseRecord.removeListener(event-name, listener)`
+To unregister a listener use: `kahunCaseRecord.release(event-name, listener)`
 
 **Example**
 ```javascript
@@ -884,7 +894,7 @@ kahunCaseRecord.on("done", (evt) => {
    <td>
 <h7>done</h7>
    </td>
-   <td>Issued when chat bot is finished, whether the chat is completed, or was abandoned or skipped.
+   <td>Issued when chatbot is finished, whether the chat is completed, or was abandoned or skipped.
    </td>
    <td><code>{ 
   "type": "done", 
@@ -916,17 +926,6 @@ For example, to make the widget look properly placed in the page you may append 
 }
 ```
 
-##### open-kahun-icon
-
-Another CSS class added is _.open-kahun-icon_ which wraps the round icon that opens the chat, so the following rule can
-be added to alter the “open” button location
-
-```css
-#kahun-patient .open-kahun-icon {
-    right: auto;
-    left: 15%;
-}
-```
 ### Sample Code
 Here are examples which you can copy, implementing a custom button, widget initialization, and integration with the API:
 

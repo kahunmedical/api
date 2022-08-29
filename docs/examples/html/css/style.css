@@ -274,6 +274,10 @@ div.code-toolbar>.toolbar {
     right: 0;
     opacity: 1;
 }
+#kahun-patient.inline {
+    max-width: 500px;
+    margin: auto;
+}
 :not(pre)>code[class*=language-], pre[class*=language-] {
     background: #f7f7f9;
     font-size: 14px;

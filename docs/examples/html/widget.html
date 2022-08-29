@@ -12,14 +12,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/prism.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://patient-dev.kahun.com/api/clientapi.js" async></script>
+    <script src="http://localhost:3003/dist/clientapi.js" async></script>
     <script src="js/prism.js" defer></script>
     <script src="js/script.js"></script>
     <script src="js/widget.js"></script>
     <script src="js/indent.min.js"></script>
 </head>
 <body>
-    <div id="kahun-patient"></div>
+
     <header>
         <img src="img/logo.png" alt="Kahun" class="logo">
         <h1>Partner Integration API - HTML Widget Demo</h1>
@@ -47,10 +47,16 @@
                            <input type="radio" id="centerAlign" value="center" name="windowAlign">
                            <label class="form-check-label" for="centerAlign">Center</label>
                        </div>
+                    </div>
+                    <div class="form-row form-checkboxes">
                         <div class="form-check">
-                           <input type="radio" id="fullscreenAlign" value="fullscreen" name="windowAlign">
-                           <label class="form-check-label" for="fullscreenAlign">Full screen</label>
-                       </div>
+                            <input type="radio" id="fullscreenAlign" value="fullscreen" name="windowAlign">
+                            <label class="form-check-label" for="fullscreenAlign">Full screen</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" id="inlineAlign" value="inline" name="windowAlign">
+                            <label class="form-check-label" for="inlineAlign">Inline</label>
+                        </div>
                     </div>
                     <div class="form-row">
                         <label class="form-label" for="locale">Locale:</label>
@@ -90,12 +96,12 @@
                 <div class="form-row"><label class="section-toggle" onclick="toggleSection(this,'#textOverrides')">Text Overrides</label></div>
                 <div id="textOverrides" class="form-section">
                 <div class="form-row">
-                    <label class="form-label" for="welcomePatient">Top welcome text:</label>
-                    <textarea class="form-input big-input" id="welcomePatient" name="welcomePatient" rows="2"></textarea>
+                    <label class="form-label" for="welcomeLogo">Top title:</label>
+                    <textarea class="form-input big-input" id="welcomeLogo" name="welcomeLogo" rows="2"></textarea>
                 </div>
                 <div class="form-row">
-                    <label class="form-label" for="welcomePartners">Main welcome text:</label>
-                    <textarea class="form-input big-input" id="welcomePartners" name="welcomePartners" rows="3"></textarea>
+                    <label class="form-label" for="welcomePatient">Top welcome text:</label>
+                    <textarea class="form-input big-input" id="welcomePatient" name="welcomePatient" rows="2"></textarea>
                 </div>
                 <div class="form-row">
                     <label class="form-label" for="thankYouPatient">Thank you text:</label>
@@ -120,6 +126,7 @@
         <div class="buttons-box">
             <button class="kahun-button" id="kahunButton" onclick="startKahunChat()">Start Chat</button>
         </div>
+        <div id="kahun-patient"></div>
         <div class="status-row">
             <div id="chatPlaceHolder"></div>
             <div class="status-box">
