@@ -723,35 +723,35 @@ Here is a list of supported alignment variations:
    <td>data-window-alignment="left" </td>
    <td>Window is aligned to the <strong>left</strong> side of the screen<strong> (default)</strong></td>
    <td>
-    <img src="window_alignment_left.png" width="" alt="alt_text" title="image_tooltip">
+    <img src="leftWidget.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="right" </td>
    <td>Window is aligned to the <strong>right</strong> side of the screen (default)</td>
    <td>
-    <img src="window_alignment_right.png" width="" alt="alt_text" title="image_tooltip">
+    <img src="rightWidget.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="center"</td>
    <td>The window will open in a pop-up like view the middle of the screen with a dark background over the content of the page</td>
    <td>
-    <img src="window_aligment_center.png" width="" alt="alt_text" title="image_tooltip">
+    <img src="centerWidget.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="fullscreen"</td>
    <td>This value is used for clients who wish to load the chat as a standalone app that takes over the entire content of the page.<p> NOTE: if in “fullscreen” mode the user cannot close/minimize the chat screen</td>
    <td>
-    <img src="window_aligment_fullscreen.png" width="" alt="alt_text" title="image_tooltip">
+    <img src="fullscreenWidget.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
   <tr>
    <td>data-window-alignment="inline"</td>
    <td>The widget will be placed <strong>within</strong> the content of the web page. The widget window's dimensions are set according to it's containing Div element (#kahu-patient) styling.</td>
    <td>
-    <img src="window_aligment_fullscreen.png" width="" alt="alt_text" title="image_tooltip">
+    <img src="inlineWidget.png" width="" alt="alt_text" title="image_tooltip">
    </td>
   </tr>
 </table>
