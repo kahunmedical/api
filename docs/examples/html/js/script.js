@@ -14,6 +14,21 @@ function toggleSection(e,objId) {
     document.querySelector(objId).classList.toggle('open');
 }
 
+function escapeHtml(unsafe)
+{
+    return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+function stringValue(selector) {
+    return document.querySelector(selector).value.trim();
+}
+
 function addDemoData(selector) {
     document.querySelector(selector).value = `{
       "caseFormat": "athena",

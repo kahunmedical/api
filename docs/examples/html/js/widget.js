@@ -14,8 +14,47 @@ async function startKahunChat() {
    await kahunCaseRecord.startChatBotWidget({widgetSettings});
 }`
 const defaultHtml = `&lt;script src="https://patient.kahun.com/api/clientapi.js" async&gt;&lt;/script&gt;
-&lt;div id="kahun-patient"{windowAlign}{buttonAlign}&gt;&lt;/div&gt;
+&lt;div id="kahun-patient"{windowAlign}&gt;&lt;/div&gt;
 &lt;button class="kahun-button" onclick="startKahunChat()"&gt;Start Chat&lt;/button&gt;`
+
+function onKahunStateChange(evt) {
+    console.log('state:', evt.state);
+    printToStatus(`<i>Widget State:</i> ${evt.state}`);
+    if (evt.state === 'closed') {
+        toggleCloseButton(false);
+        toggleChatPlaceholder(false);
+    }
+}
+
+function onKahunStatusChange(evt) {
+    printToStatus(`<i>Progress:</i> ${evt.progress}%`);
+}
+
+function onKahunDone(evt) {
+    printToStatus("<strong>User has completed the chat</strong>");
+    getSummary();
+}
+
+async function getSummary() {
+    printToStatus("Getting summery...");
+    // put summary data on screen
+    const output = await kahunCaseRecord.generateSummary();
+    const { patientSummary, navigationAdvice, mostLikelyCauses } = output;
+
+    const summary = patientSummary?.data?.sections
+        ?.map((s) => s?.content)
+        .join("<br/>");
+    printToStatus(`<br><strong>Summary:</strong></br>${summary}`)
+
+    const likely = mostLikelyCauses?.map((c) => c.name).join("<br/>");
+    printToStatus(`<br><strong>Likely causes:</strong></br>${likely}`)
+
+    const navigation = navigationAdvice
+        ? `${navigationAdvice.title}<br>${navigationAdvice.description}`
+        : "No Navigation Advice Provided";
+    printToStatus(`<br><strong>Navigation Advice:</strong></br>${navigation}`)
+}
+
 
 async function onKahunLoaded() {
     kahunCaseRecord = await Kahun.newCaseRecord({
@@ -23,20 +62,9 @@ async function onKahunLoaded() {
         clinicId: "0e50ee14-afa9-406c-aaf2-8410dd7b0e3d",
         clinicalData,
     });
-        kahunCaseRecord.on("widget_state", (evt) => {
-        console.log('state:', evt.state);
-        printToStatus(`<i>Widget State:</i> ${evt.state}`);
-        if (evt.state === 'closed') {
-            toggleCloseButton(false);
-            toggleChatPlaceholder(false);
-        }
-    });
-    kahunCaseRecord.on("status", (evt) => {
-        printToStatus(`<i>Progress:</i> ${evt.progress}%`);
-    });
-    kahunCaseRecord.on("done", (evt) => {
-        printToStatus("<strong>User has completed the chat</strong>");
-    });
+    kahunCaseRecord.subscribe("widget_state", onKahunStateChange);
+    kahunCaseRecord.subscribe("status", onKahunStatusChange);
+    kahunCaseRecord.subscribe("done", onKahunDone);
     printToStatus("<strong>Kanun loaded</strong><br/>The new case id is " + kahunCaseRecord.getCaseId())
     toggleButton(true);
 }
@@ -67,6 +95,7 @@ function generateWidgetCode() {
     }
 
     const kahunDiv = document.querySelector('#kahun-patient');
+    kahunDiv.className = kahunWindowAlign;
     if (kahunWindowAlign) kahunDiv.setAttribute("data-window-alignment", kahunWindowAlign);
 
     const locale = stringValue('#locale');
@@ -88,13 +117,13 @@ function generateWidgetCode() {
     const initialData = stringValue('#initialData');
     if (initialData) clinicalData = JSON.parse(initialData);
 
+    const welcomeLogo = stringValue('#welcomeLogo');
+    if (welcomeLogo) {
+        overrides.WELCOME_LOGO = welcomeLogo
+    }
     const welcomePatient = stringValue('#welcomePatient');
     if (welcomePatient) {
         overrides.WELCOME_PATIENT = welcomePatient
-    }
-    const welcomePartners = stringValue('#welcomePartners');
-    if (welcomePartners) {
-        overrides.WELCOME_PARTNERS = welcomePartners
     }
     const thankYouPatient = stringValue('#thankYouPatient');
     if (thankYouPatient) {
@@ -108,10 +137,10 @@ function generateWidgetCode() {
     if (Object.keys(overrides).length > 0) {
         clinicalData.overrides = overrides
     }
-    if (clinicalData) {
+    console.log(overrides)
+    if (Object.keys(clinicalData).length > 0) {
         //let parsedInitialData = JSON.parse(initialData);
         caseProps = "\nclinicalData:" + JSON.stringify(clinicalData).replaceAll('{','{\n').replaceAll('}','\n}').replaceAll(',',',\n');
-        console.log(caseProps);
     }
 
     let widgetSettingsStr = '';
@@ -125,7 +154,7 @@ function generateWidgetCode() {
 
     let htmlCode = defaultHtml.replace('{windowAlign}',kahunWindowAlign?' data-window-alignment="' + kahunWindowAlign + '"':'');
     document.querySelector('#htmlCode').innerHTML = indent.js(htmlCode, {tabString: '\t'});
-    let jsCode = defaultJs.replace('{caseProps}',caseProps?caseProps:'').replace('{widgetSettings}',widgetSettingsStr);
+    let jsCode = defaultJs.replace('{caseProps}',caseProps?escapeHtml(caseProps):'').replace('{widgetSettings}',widgetSettingsStr);
     document.querySelector('#jsCode').innerHTML = indent.js(jsCode, {tabString: '\t'});
     Prism.highlightAll();
 }
@@ -138,10 +167,6 @@ function toggleButton(on) {
         button.classList.remove('active');
 }
 
-function stringValue(selector) {
-    return document.querySelector(selector).value.trim();
-}
-
 function resetCode() {
     document.querySelector('#genForm').reset();
     const kahunDiv = document.querySelector('#kahun-patient');
@@ -152,9 +177,9 @@ function resetCode() {
 function generateNewCode() {
     toggleButton(false);
     generateWidgetCode();
-    kahunCaseRecord.removeListener("widget_state") ;
-    kahunCaseRecord.removeListener("status");
-    kahunCaseRecord.removeListener("done");
+    kahunCaseRecord.release("widget_state", onKahunStateChange);
+    kahunCaseRecord.release("status", onKahunStatusChange);
+    kahunCaseRecord.release("done", onKahunDone);
     //can't use window.removeEventListener because handlers are anonymous
     closeWidget();
     clearStatus();
