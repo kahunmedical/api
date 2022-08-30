@@ -607,7 +607,7 @@ In order to integrate a widget-like element in your HTML page, take the followin
 
 2. Create a div element on the page which will hold the widget.  \
    The div element should have the following id: id=”kahun-patient” . Kahun code will place the widget into the DOM
-   within the div you have provided. \
+   within the div you have provided.
 
    The div tag is configured using html attributes below. 
 
