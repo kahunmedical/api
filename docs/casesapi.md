@@ -17,7 +17,7 @@ partner can:
   the interaction.
 
 _The REST API is intended to be used for server-to-server communication, and not directly from a web-browser.
-To interact with Kahun in a client-side context, e.g. from a webpage on your system, please see the [Web Browser SDK section](#sdk)_
+To interact with Kahun in a client-side context, e.g. from a webpage on your system, please see the [Web Browser SDK section](#Web-Browser-SDK)_
 
 ### **Postman Collection**
 Postman (postman.com) is a free tool for testing APIs. We provide a Postman collection which you can import to try out the API described in this document and see working examples.  
@@ -101,7 +101,7 @@ Kahun supports the following:
   ```
 
 This will create a case record with no initial patient information.
-
+<a name="initial"></a>
 * **Initial clinical and demographic data.**  \
   The supported format for clinical data is a JSON formatted object. The format specification matches the Athena Health
   API (see _[https://docs.athenahealth.com/api/docs/charts](https://docs.athenahealth.com/api/docs/charts)_), but is
@@ -168,9 +168,7 @@ These are the supported text overrides:
      The text appearing at the beginning of the welcome text<br>
      <em>(Default: empty)</em>
    </td>
-   
   </tr>
-  
   <tr>
    <td>THANK_YOU_PATIENT
    </td>
@@ -201,7 +199,7 @@ The response is a JSON document with the following properties. All values below 
 | caseId         | The unique ID for this case record                                                                                                                                                              |
 | pdf            | A URL link which downloads a pdf document with a formatted version of the summary information                                                                                                   |
 
-### **Retrieving the Case Summary**
+### Retrieving the Case Summary
 
 The summary is retrieved from the ‘summary’ link, which is returned when the case record is created. The summary
 contains a textual description of the case, as well as structured information generated from Kahun’s clinical reasoning
@@ -209,7 +207,7 @@ engine.
 
 The summary can be used to copy Kahun’s output to an external system, for example, as a case note to an EHR system.
 
-Here is the basic structure of the summary JSON document <a id="summary-format"></a>
+Here is the basic structure of the summary JSON document 
 
 ```json
 {
@@ -402,6 +400,7 @@ REST API.
 ##### Patient Summary
 
 The patient summary is only included in the notification when the status has changed to either COMPLETED or ABANDONED.
+
 <a id="sdk"></a>
 ## Web Browser SDK
 
@@ -411,6 +410,10 @@ Using the SDK, you can do the following within your website:
 * Create a new case record, and populate it with existing patient information
 * Host the Kahun Chatbot as a widget running within your own website
 * Retrieve case insights such as text summary, navigation advice, and likely diagnosis directly to the web page. 
+
+##### Before you begin integration
+
+Coordinate with Kahun staff the domain(s) which are going to host the script tag. The Kahun backend must be configured with your domain details to prevent CORS errors when using Kahun code on your website.
 
 
 ### SDK Script Tag
@@ -435,10 +438,6 @@ The script will automatically search for and run a function called `onKahunLoade
 <script src="https://patient.kahun.com/api/clientapi.js" async></script>
 </head>
 ```
-##### Before you begin integration
-
-Coordinate with Kahun staff the domain(s) which are going to host the script tag. The Kahun backend must be configured with your domain details to prevent CORS errors when using Kahun code on your website.
-
 
 ### Obtaining a Case Record
  
@@ -460,11 +459,11 @@ declare namespace Kahun {
 **`Kahun.newCaseRecord({...params})`**
 Use to create a new case record which will be assigned a unique id in the Kahun system.
 
-| <em>Parameter</em> | <em>Description</em>                                                                                                                                                                                    |    
-|--------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| apiKey             | The api key provided to you                                                                                                                                                                             |
-| clinicId           | The provided clinic id                                                                                                                                                                                  |      
-| clinicalData       | Optional. Use this to prepopulate information about the patient.<br>  See the [Initial clinical and demographic data](#Initial clinical and demographic data) section for a description of this format. |
+| <em>Parameter</em> | <em>Description</em>                                                                                                                                                   |    
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| apiKey             | The api key provided to you                                                                                                                                            |
+| clinicId           | The provided clinic id                                                                                                                                                 |      
+| clinicalData       | Optional. Use this to prepopulate information about the patient.<br>  See the [Initial clinical and demographic data](#body) section for a description of this format. |
 
 Returns a promise which will resolve to the CaseRecord object for the newly created case.
 
@@ -536,86 +535,6 @@ interface CaseRecord {
   startChatBotWidget(settings?: WidgetSettings): Promise<boolean>; // launch the chatbot as a page widget
   removeChatBotWidget(): void; // remove the chatbot widget from the page
   subscribe(name: string, cb: any); // register for events
-  release(name: string, cb: any); //  unsregister for events
-}
-```
-The CaseRecord object is returned when creating a new case, or accessing an existing case. This provides the main API for functionality relating to the case.
-
-#### getCaseId
-
-Returns the unique id for the case.
-
-#### getLinks
-
-Returns an object containing urls to various web services.
-<table>
-  <tr>
-   <td><em>FIELD</em>
-   </td>
-   <td><em>DESCRIPTION</em>
-   </td>
-  </tr>
-  <tr>
-   <td>patient
-   </td>
-   <td>A URL link for the patient of Kahun’s Patient1st application. This link can be shared with the patient.
-   </td>
-  </tr>
-  <tr>
-   <td>provider
-   </td>
-   <td>A URL link for the physician which displays the Patient Card web interface. The Patient Card displays the summary and Kahun’s insights relating to the patient background and present findings. 
-   </td>
-  </tr>
-  <tr>
-   <td>summary
-   </td>
-   <td>A URL link to a JSON document representing a textual summary for the patient case.
-   </td>
-  </tr>
-  <tr>
-   <td>pdf
-   </td>
-   <td>A URL link which downloads a pdf document with a formatted version of the summary information
-   </td>
-  </tr>
-</table>
-
-#### getStatus
-Returns the current status of the interaction.
-
-#### generateSummary
-Returns a promise which resolves to the _Summary Output Document_. This JSON object contains the textual summary, navigation advice, and differencial diagnosis.
-It is best to wait until the case is no longer in progress (status will be either "COMPLETED" or "ABANDONED") before generating the summary.
-
-The format of the returned object is the same as for the REST API. See [Summary Resource](#summary-format)
-
-### ChatBot Widget
-
-Kahun’s chatbot can be run as an integrated HTML element embedded in your page. The chatbot is launched and controlled using the CaseRecord API
-
-Note: You do not have to integrate the chatbot in your own website. Kahun's chatbot also runs as a standalone responsive web app which is designed to be usable on a wide range of devices both
-desktop and mobile. To launch the standalone application, launch the url which is provided under the _patient_ property returned when the case record was created, or returned from the `kahunCaseRecord.getLinks()` API call.
-
-
-#### **HTML Integration**
-
-In order to integrate a widget-like element in your HTML page, take the following steps:
-
-##### Div Tag
-
-1. Include the Kahun script tag as described above.
-
-### Case Record Object
-```typescript
-interface CaseRecord {
-  getCaseId(): string; // the id of the case
-  getLinks(): Record<string, string>; // get urls for summary,pdf,patient,and provider web resources
-  getStatus(): "ABANDONED" | "COMPLETED" | "IN_PROGRESS" | "CREATED";  
-  generateSummary(): Promise<object>; // generate and receive summary output
-  startChatBotWidget(settings?: WidgetSettings): Promise<boolean>; // launch the chatbot as a page widget
-  removeChatBotWidget(): void; // remove the chatbot widget from the page
-  subscribe(name: string, cb: any); // register for events
   release(name: string, cb: any); // unregister for events
 }
 ```
@@ -668,7 +587,7 @@ Returns the current status of the interaction.
 Returns a promise which resolves to the _Summary Output Document_. This JSON object contains the textual summary, navigation advice, and differential diagnosis. 
 It is best to wait until the case is no longer in progress (status will be either "COMPLETED" or "ABANDONED") before generating the summary. 
 
-The format of the returned object is the same as for the REST API. See [Summary Resource](#summary-format)
+The format of the returned object is the same as for the REST API. See [Summary Resource](#Retrieving-the-Case-Summary)
 
 ### ChatBot Widget
 
@@ -689,7 +608,6 @@ In order to integrate a widget-like element in your HTML page, take the followin
 2. Create a div element on the page which will hold the widget.  \
    The div element should have the following id: id=”kahun-patient” . Kahun code will place the widget into the DOM
    within the div you have provided. \
-   \
 
    The div tag is configured using html attributes below. 
 
