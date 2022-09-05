@@ -128,6 +128,26 @@ This will create a case record with no initial patient information.
 } 
 ```
 
+* **Patient Properties** \
+Each request can also have a key-value patient properties.\
+The object will be included in the status response, and in the webhook notification message.\
+\
+It is also possible to send data that will change the in-take process, to include or exclude some questions. \
+For changes in behaviour please contact Kahun support. \
+\
+<span style=color:red>Please avoid sending PII in the patient properties.</span> 
+\
+\
+Example for a request with properties: 
+```json
+{
+  "patientProperties": {
+    "VisitType": "FirstVisit",
+    "AdditionalData": "Some more data"
+  }
+}
+```
+
 * **Text Overrides** \
   Each request can also have an overrides object, which enables to customize texts shown in the Patient1st application. You can customize text using plain text or html formatted text.\
   \
