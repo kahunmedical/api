@@ -129,11 +129,15 @@ This will create a case record with no initial patient information.
 ```
 
 * **Patient Properties** \
-Each request can also have a key-value patient properties.\
-The object will be included in the status response, and in the webhook notification message.\
+
+
+
+Each request can also include an object containing arbitrary key-value patient properties.\
+This object will be returned as part of the status response, and in the web-hook notification message.\
 \
-It is also possible to send data that will change the in-take process, to include or exclude some questions. \
-For changes in behaviour please contact Kahun support. \
+This allows you to add any custom data fields on the case that will be needed when processing notifications from Kahun.\
+Patient properties can also be used to customize the intake process by enabling or disabling specific intake questions based on property values.\
+For customized changes in the intake process please contact Kahun support.\
 \
 <span style=color:red>Please avoid sending PII in the patient properties.</span> 
 \
