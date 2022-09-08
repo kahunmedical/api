@@ -128,9 +128,7 @@ This will create a case record with no initial patient information.
 } 
 ```
 
-* **Patient Properties** \
-
-
+* **Patient Properties** 
 
 Each request can also include an object containing arbitrary key-value patient properties.\
 This object will be returned as part of the status response, and in the web-hook notification message.\
