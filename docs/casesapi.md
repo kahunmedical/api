@@ -698,9 +698,9 @@ Use the `kahunCaseRecord.startChatBot(...)` API call to launch the widget and mo
 
 ```typescript
 interface WidgetSettings {
-    locale: string; // the display language for chatbot
-    onCompletionUrl: URL; // if provided, will redirect at end of conversation
-    onAbandonUrl: URL; // if provided, will redirect when conversation ends prematurely
+    locale?: string; // the display language for chatbot
+    onCompletionUrl?: URL; // if provided, will redirect at end of conversation
+    onAbandonUrl?: URL; // if provided, will redirect when conversation ends prematurely
 }
 
 ```
