@@ -137,15 +137,31 @@ This allows you to add any custom data fields on the case that will be needed wh
 Patient properties can also be used to customize the intake process by enabling or disabling specific intake questions based on property values.\
 For customized changes in the intake process please contact Kahun support.\
 \
-<span style=color:red>Please avoid sending PII in the patient properties.</span> 
+<span style=color:red>Please avoid sending PII in the patient properties. For PII see "Patient Properties with PII" section below</span> 
 \
 \
 Example for a request with properties: 
 ```json
 {
   "patientProperties": {
-    "VisitType": "FirstVisit",
-    "AdditionalData": "Some more data"
+    "visitType": "FirstVisit",
+    "additionalData": "Some more data"
+  }
+}
+```
+
+* **Patient Properties with PII**
+
+If you need to send patient properties that contain PII use piiPatientProperties object.\
+This object behaves the same way as patient properties described above, but it can not be used for intake logic customization.
+
+
+Example for a request with PII properties:
+```json
+{
+  "piiPatientProperties": {
+    "name": "A name",
+    "date": "A date"
   }
 }
 ```
