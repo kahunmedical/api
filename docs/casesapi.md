@@ -365,11 +365,11 @@ The status is a JSON document:
 }
 ```
 
-| <em>FIELD</em>       | <em>TYPE</em> | <em>DESCRIPTION</em>                                                                                                                                                                                                                                                        |    
-|----------------------|---------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| status               | string        | <p>CREATED: Case was created. Patient did not open the conversation yet.</p><p>IN_PROGRESS: Patient opened the conversation.</p><p>COMPLETED: Patient completed the conversation.</p><p>ABANDONED: Patient closed the widget, or clicked on "skip remaining questions" </p> |
-| questionCount        | number        | The number of questions the patient answered.                                                                                                                                                                                                                               |
-| conversationProgress | number        | An approximate progress in percentage. This is a heuristic measure of the percentage of the clinical intake process that has been completed                                                                                                                                 |
+| <em>FIELD</em>       | <em>TYPE</em> | <em>DESCRIPTION</em>                                                                                                                                                                                                                                                                                        |    
+|----------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| status               | string        | <p>CREATED: Case was created. Patient did not open the conversation yet.</p><p>Patient answered at least one question but did not complete the conversation.</p><p>COMPLETED: Patient completed the conversation.</p><p>ABANDONED: Patient closed the widget, or clicked on "skip remaining questions" </p> |
+| questionCount        | number        | The number of questions the patient answered.                                                                                                                                                                                                                                                               |
+| conversationProgress | number        | An approximate progress in percentage. This is a heuristic measure of the percentage of the clinical intake process that has been completed                                                                                                                                                                 |
 
 ## Webhook Integration
 
