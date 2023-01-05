@@ -254,11 +254,17 @@ Here is the basic structure of the summary JSON document
       "age": "<number>",
       "gender": "<Female | Male>",
       "main": "<Chief Complaint>",
+      "visitReason": [
+        {
+          "id": "<kahun id>",
+          "name": "<reason for visit>"
+        }
+      ],
       "sections": [
         {
           "title": "<section title>",
           "content": "<section text content>",
-          "type": "<one of: assessment|dd|hpi|imaging|labs|pe|plan|referral|ros|suggested|triage_advice>"
+          "type": "<one of: assessment|dd|hpi|imaging|labs|pe|referral|ros|suggested|triage_advice|reason_for_visit>"
         }
       ]
     }
@@ -317,6 +323,27 @@ Here is an example of a summary section:
   "status": "COMPLETED"
 }
 ```
+#### Visit reason
+The reason for visit is included, when available, as part of the summary JSON response. The visit reason includes the following fields:
+
+| <em>FIELD</em> | <em>DESCRIPTION</em>                                        |
+|----------------|-------------------------------------------------------------|
+| name           | Reason for visit name                                       |
+| id             | An id string which uniquely identifies this reason for visit 
+
+#### Visit reason types
+The available reason for visit are:
+
+| <em>Id</em>                                         | <em>reason for visit</em> |
+|-----------------------------------------------------|---------------------------|
+| FE.4814c115-d0a6-4ad7-86c5-8962a1856db0             | New medical condition     
+| FE.bbdff34e-7bff-4f92-8cc8-00b344339942             | Prescription refill       |
+| FE.2c78545f-1346-4a81-9f3a-726a6ee6b976             | Follow up visit           |
+| FE.ffdb2dc1-3b2c-49ee-85ee-be6de6963432             | Annual checkup            |
+| FE.a0039fed-7e20-4a94-8aa5-b9cc5baecedb             | Other                     |
+
+
+
 #### Navigation Advice
 The navigation advice is included, when available, as part of the summary JSON response. The navigation advice includes the following fields.
 
