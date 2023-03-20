@@ -128,6 +128,44 @@ This will create a case record with no initial patient information.
 } 
 ```
 
+* **Patient Properties** 
+
+Each request can also include an object containing arbitrary key-value patient properties.\
+This object will be returned as part of the status response, and in the web-hook notification message.\
+\
+This allows you to add any custom data fields on the case that will be needed when processing notifications from Kahun.\
+Patient properties can also be used to customize the intake process by enabling or disabling specific intake questions based on property values.\
+For customized changes in the intake process please contact Kahun support.\
+\
+<span style=color:red>Please avoid sending PII in the patient properties. For PII see "Patient Properties with PII" section below</span> 
+\
+\
+Example for a request with properties: 
+```json
+{
+  "patientProperties": {
+    "visitType": "FirstVisit",
+    "additionalData": "Some more data"
+  }
+}
+```
+
+* **Patient Properties with PII**
+
+If you need to send patient properties that contain PII use piiPatientProperties object.\
+This object behaves the same way as patient properties described above, but it can not be used for intake logic customization.
+
+
+Example for a request with PII properties:
+```json
+{
+  "piiPatientProperties": {
+    "name": "A name",
+    "date": "A date"
+  }
+}
+```
+
 * **Text Overrides** \
   Each request can also have an overrides object, which enables to customize texts shown in the Patient1st application. You can customize text using plain text or html formatted text.\
   \
@@ -216,11 +254,17 @@ Here is the basic structure of the summary JSON document
       "age": "<number>",
       "gender": "<Female | Male>",
       "main": "<Chief Complaint>",
+      "visitReason": [
+        {
+          "id": "<kahun id>",
+          "name": "<reason for visit>"
+        }
+      ],
       "sections": [
         {
           "title": "<section title>",
           "content": "<section text content>",
-          "type": "<one of: assessment|dd|hpi|imaging|labs|pe|plan|referral|ros|suggested|triage_advice>"
+          "type": "<one of: assessment|dd|hpi|imaging|labs|pe|referral|ros|suggested|triage_advice|reason_for_visit>"
         }
       ]
     }
@@ -279,6 +323,27 @@ Here is an example of a summary section:
   "status": "COMPLETED"
 }
 ```
+#### Visit reason
+The reason for visit is included, when available, as part of the summary JSON response. The visit reason includes the following fields:
+
+| <em>FIELD</em> | <em>DESCRIPTION</em>                                        |
+|----------------|-------------------------------------------------------------|
+| name           | Reason for visit name                                       |
+| id             | An id string which uniquely identifies this reason for visit 
+
+#### Visit reason types
+The available reason for visit are:
+
+| <em>Id</em>                                         | <em>reason for visit</em> |
+|-----------------------------------------------------|---------------------------|
+| FE.4814c115-d0a6-4ad7-86c5-8962a1856db0             | New medical condition     
+| FE.bbdff34e-7bff-4f92-8cc8-00b344339942             | Prescription refill       |
+| FE.2c78545f-1346-4a81-9f3a-726a6ee6b976             | Follow up visit           |
+| FE.ffdb2dc1-3b2c-49ee-85ee-be6de6963432             | Annual checkup            |
+| FE.a0039fed-7e20-4a94-8aa5-b9cc5baecedb             | Other                     |
+
+
+
 #### Navigation Advice
 The navigation advice is included, when available, as part of the summary JSON response. The navigation advice includes the following fields.
 
@@ -327,11 +392,24 @@ The status is a JSON document:
 }
 ```
 
-| <em>FIELD</em>       | <em>TYPE</em> | <em>DESCRIPTION</em>                                                                                                                                                                                                           |    
-|----------------------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| status               | string        | <p>CREATED: Case was created. Patient did not answer a question yet.</p><p>IN_PROGRESS: Patient answered at least one question but did not complete the conversation.</p><p>COMPLETED: Patient completed the conversation.</p> |
-| questionCount        | number        | The number of questions the patient answered.                                                                                                                                                                                  |
-| conversationProgress | number        | An approximate progress in percentage. This is a heuristic measure of the percentage of the clinical intake process that has been completed                                                                                    |
+| <em>FIELD</em>       | <em>TYPE</em>    | <em>DESCRIPTION</em>                                                                                                                                                                                                                                                                                        |    
+|----------------------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| status               | string           | <p>CREATED: Case was created. Patient did not open the conversation yet.</p><p>Patient answered at least one question but did not complete the conversation.</p><p>COMPLETED: Patient completed the conversation.</p><p>ABANDONED: Patient closed the widget, or clicked on "skip remaining questions" </p> |
+| questionCount        | number           | The number of questions the patient answered.                                                                                                                                                                                                                                                               |
+| conversationProgress | number           | An approximate progress in percentage. This is a heuristic measure of the percentage of the clinical intake process that has been completed                                                                                                                                                                 |
+| gender               | string           | male/female                                                                                                                                                                                                                                                                                                 |
+| age                  | number           | patient age                                                                                                                                                                                                                                                                                                 |
+| chiefComplaint       | object           | Kahun feature structure as described below for chief complaint                                                                                                                                                                                                                                              |
+| visitReasong         | Array of objects | Array of Kahun feature structure as described below for visit reasons                                                                                                                                                                                                                                       |
+
+Kahun feature structure is composed of:
+
+| <em>FIELD</em> | <em>TYPE</em> | <em>DESCRIPTION</em>      |    
+|----------------|---------------|---------------------------|
+| id             | string        | Kahun unique identifier   |
+| snomedid       | string        | SNOMED Id when applicable |
+| name           | string        | kahun name                |
+
 
 ## Webhook Integration
 
@@ -676,9 +754,9 @@ Use the `kahunCaseRecord.startChatBot(...)` API call to launch the widget and mo
 
 ```typescript
 interface WidgetSettings {
-    locale: string; // the display language for chatbot
-    onCompletionUrl: URL; // if provided, will redirect at end of conversation
-    onAbandonUrl: URL; // if provided, will redirect when conversation ends prematurely
+    locale?: string; // the display language for chatbot
+    onCompletionUrl?: URL; // if provided, will redirect at end of conversation
+    onAbandonUrl?: URL; // if provided, will redirect when conversation ends prematurely
 }
 
 ```
