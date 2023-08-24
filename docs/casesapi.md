@@ -102,7 +102,7 @@ Kahun supports the following:
 
 This will create a case record with no initial patient information.
 <a name="initial"></a>
-* **Initial clinical and demographic data.**  \
+* **Initial clinical and demographic data - Athena Health API.**  \
   The supported format for clinical data is a JSON formatted object. The format specification matches the Athena Health
   API (see _[https://docs.athenahealth.com/api/docs/charts](https://docs.athenahealth.com/api/docs/charts)_), but is
   general enough to be created from a variety of source data.
@@ -110,8 +110,8 @@ This will create a case record with no initial patient information.
 **Example**
 ```json
 {
-  "caseFormat": "athena",
   "case": {
+    "format" : "athena",
     "demographics": {
       "age": 54,
       "gender": "M"
@@ -126,6 +126,27 @@ This will create a case record with no initial patient information.
     ]
   }
 } 
+```
+
+* **Initial clinical and demographic data - Kahun API.**  \
+  Kahun custom format, supports demographics & medications as free text. It is possible to send additional data using Kahun format. 
+  For additional customized support please contact Kahun support.
+
+
+  **Example**
+```json
+{
+  "case": {
+    "format" : "kahun",
+    "demographics": {
+      "age": 54,
+      "gender": "M"
+    },
+    "medications": { 
+      "freeText": "Aspirin 10 mg every day in the last week"
+    }
+  }
+}
 ```
 
 * **Patient Properties** 
