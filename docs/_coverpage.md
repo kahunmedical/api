@@ -1,5 +1,5 @@
 <!-- _coverpage.md -->
 ![logo](splash.svg)
 ## Partner Integration API
-#### **Last updated on: 6.7.2022**
+#### **Last updated on: 29.11.2023**
 
